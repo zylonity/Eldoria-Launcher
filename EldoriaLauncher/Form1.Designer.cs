@@ -78,10 +78,10 @@
             pictureBox3.BackColor = Color.Transparent;
             pictureBox3.Cursor = Cursors.Hand;
             pictureBox3.Image = Properties.Resources.minimizar;
-            pictureBox3.Location = new Point(721, 16);
+            pictureBox3.Location = new Point(721, 21);
             pictureBox3.Margin = new Padding(4, 3, 4, 3);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(0, 3);
+            pictureBox3.Size = new Size(25, 11);
             pictureBox3.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox3.TabIndex = 15;
             pictureBox3.TabStop = false;
