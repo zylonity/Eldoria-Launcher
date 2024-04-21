@@ -1,21 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using System.Net;
-using System.IO;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
-using CmlLib.Core.Auth.Microsoft;
-using CmlLib.Core.VersionLoader;
-using LibGit2Sharp;
 using System.Runtime.InteropServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Net.WebRequestMethods;
@@ -23,16 +9,11 @@ using System.Diagnostics;
 using System.Threading;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using Modrinth;
-using Modrinth.Exceptions;
-using System.Net;
-using System.Net.Http;
-using Modrinth.Helpers;
-using Modrinth.Extensions;
-using Modrinth.Endpoints.Project;
-using Modrinth.Models;
+using CmlLib.Core.Installer.FabricMC;
+using CmlLib.Core.Downloader;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
-using static System.Windows.Forms.Design.AxImporter;
-using CmlLib.Core.Version;
+
 
 namespace EldoriaLauncher
 {
@@ -40,20 +21,50 @@ namespace EldoriaLauncher
     {
         string offlineUsername = (string)Properties.Settings.Default["Username"];
         int ram = (int)Properties.Settings.Default["Ram"];
-        string mcVer = "1.19.2-forge-43.2.0";
-        string verPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
-        string sRepo = "https://github.com/zylonity/Elixa-Modpack";
+        string mcVer = "fabric-loader-0.15.10-1.20.1";
+
+        MinecraftPath mcPath;
+        string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
+
+        string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
+
+        CMLauncher launcher;
+        
 
         bool validateFiles = false;
         bool updating = false;
 
-        Downloading downloadWindow;
+        bool downloadFilesAsync = true;
 
-
-
-        //Currently only checks for the initial download, if files are missing then download everything from the repo
-        async Task CheckUpdates()
+        async Task InstallFabric(Downloading downloading)
         {
+            mcPath = new MinecraftPath(mcPathStr);
+            launcher = new CMLauncher(mcPath);
+
+            downloading.DownloadBigLabel.Text = "Descargando Frabic";
+            downloading.progressBar1.Visible = false;
+            downloading.progressBar2.Visible = false;
+            downloading.CurrentDownload.Visible = false;
+
+            // initialize fabric version loader
+            var fabricVersionLoader = new FabricVersionLoader();
+            var fabricVersions = await fabricVersionLoader.GetVersionMetadatasAsync();
+
+            // install
+            var fabric = fabricVersions.GetVersionMetadata(mcVer);
+
+            await fabric.SaveAsync(mcPath);
+            
+
+            await launcher.GetAllVersionsAsync();
+            downloading.progressBar1.Visible = true;
+            downloading.progressBar2.Visible = true;
+            downloading.CurrentDownload.Visible = true;
+        }
+
+        async Task InstallMods(Downloading downloading)
+        {
+            //Use my key whilst the modrinth is private, update useragent when public
             var options = new ModrinthClientConfig
             {
                 ModrinthToken = "mrp_p2f98ush9bEkhnAlCuDQCXP5GYj4IFdQGcsPXKn1top3lIgZRl13YicOCmuz",
@@ -63,63 +74,89 @@ namespace EldoriaLauncher
             var client = new ModrinthClient(options);
             var project = await client.Project.GetAsync("Eldoria");
             var dp = await client.Project.GetDependenciesAsync(project.Slug);
-            MessageBox.Show(dp.Versions[0].Files[0].Url);
-            int progressBar = 0;
-            int numberOfDownloads = dp.Projects.Length;
 
-            //await Task.Run(async () =>
-            //{
-            //    for (int i = 1; i <= numberOfDownloads; i++)
-            //    {
+            float itemsToDownload = dp.Projects.Length - 1;
+            float itemsDownloaded = 0;
 
-            //        using (WebClient wc = new WebClient())
-            //        {
+            downloading.DownloadBigLabel.Text = "Descargando Mods";
 
-            //            // Move the declaration inside the loop
-            //            int downloadNumber = i;
-
-            //            var progress = new Progress<DownloadProgress>(dp => ReportProgress(dp.Percent, downloadNumber, dp.ExpectedSize, stopwatch.Elapsed, dp.TotalBytesRead));
-
-            //            // Offload the download operation to a separate thread
-            //            await wc.DownloadFileAsync(dp.Projects[i].Url, dp.Projects[i]., verPath, progress, downloadNumber);
-            //        }
-            //    }
-            //});
-
-            //WebClient wc = new WebClient();
-            //await Task.Run(() => {
-            //    wc.DownloadFileAsync(new Uri(dp.Projects[0].Url), project.Title);
-            //    wc.DownloadProgressChanged += (s, e) =>
-            //    {
-            //        progressBar = e.ProgressPercentage;
-            //    };
-            //    label1.Text = progressBar.ToString();
-
-            //});
-            
-            
-            
-
-            if (!Directory.Exists(verPath))
+            //Download all the mods
+            for (int i = 0; i < dp.Projects.Length; i++)
             {
+                string filename = dp.Versions[i].Files[0].FileName;
+
+                int x = i;
+                if (i + 1 < dp.Projects.Length)
+                    x = i + 1;
+
+                string nextFileName = dp.Versions[x].Files[0].FileName;
+
+                WebClient webClient = new WebClient();
+                webClient.DownloadProgressChanged += (s, e) =>
+                {
+                    downloading.progressBar2.Value = e.ProgressPercentage;
+                    downloading.progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
+                };
+                webClient.DownloadFileCompleted += (s, e) =>
+                {
+                    itemsDownloaded++;
+                    downloading.CurrentDownload.Text = nextFileName;
+
+                    if ((int)itemsDownloaded == (dp.Projects.Length))
+                    {
+                        downloading.DownloadBigLabel.Text = "DONE";
+                        downloading.Close();
+                        updating = false;
+                        PlayActive();
+                    }
+                };
+
+
+                if(downloadFilesAsync == false)
+                {
+                    await webClient.DownloadFileTaskAsync(new Uri(dp.Versions[i].Files[0].Url), modsPath + "\\" + filename);
+                }
+                else
+                {
+                    webClient.DownloadFileAsync(new Uri(dp.Versions[i].Files[0].Url), modsPath + "\\" + filename);
+                }
+
+
 
 
             }
-            try
+        }
+
+
+        //Currently only checks for the initial download, if files are missing then download everything from the repo
+        async Task FirstDownload()
+        {
+
+
+            if (!Directory.Exists(mcPathStr))
             {
+                updating = true;
+                System.IO.Directory.CreateDirectory(modsPath);
+
+                //Open installing window
+                Downloading downloading = new Downloading();
+                downloading.Activate();
+                downloading.Show();
+                downloading.TopMost = true;
+
+                await InstallFabric(downloading);
+
+                await InstallMods(downloading);
+
+                if (downloadFilesAsync == false)
+                {
+                    downloading.Close();
+                    updating = false;
+                    PlayActive();
+                }
+
 
             }
-            catch (ModrinthApiException e)
-            {
-                MessageBox.Show($"API call failed with status code {e.InnerException}");
-            }
-            catch (System.AggregateException f)
-            {
-                MessageBox.Show($"{f.InnerException}");
-            }
-
-
-
 
 
         }
@@ -170,8 +207,7 @@ namespace EldoriaLauncher
         //Initialises everything
         public Form1()
         {
-
-            CheckUpdates();
+            FirstDownload();
             InitializeComponent();
             pictureBox1_EnabledChanged();
             PlayActive();
@@ -188,11 +224,11 @@ namespace EldoriaLauncher
 
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
 
-            var elixaPath = new MinecraftPath(Environment.GetEnvironmentVariable("appdata") + "\\.Elixa");
-
-            var launcher = new CMLauncher(elixaPath);
-
             ram = (int)Properties.Settings.Default["Ram"];
+
+
+            // update version list
+            await launcher.GetAllVersionsAsync();
 
             var process = await launcher.CreateProcessAsync(mcVer, new MLaunchOption
             {
@@ -202,51 +238,12 @@ namespace EldoriaLauncher
             });
 
             process.Start();
+
             this.WindowState = FormWindowState.Minimized;
             Cursor.Current = Cursors.Arrow;
             process.WaitForExit();
             pictureBox1.Enabled = true;
             this.WindowState = FormWindowState.Normal;
-        }
-
-
-        //Replaces relativePath thing that .net framwork doesnt have
-        private static string GetRelativePath(string rootPath, string fullPath)
-        {
-            var rootUri = new Uri(rootPath.EndsWith("\\") ? rootPath : rootPath + "\\");
-            var fullUri = new Uri(fullPath);
-            var relativeUri = rootUri.MakeRelativeUri(fullUri);
-            return Uri.UnescapeDataString(relativeUri.ToString());
-        }
-
-        //Looks through directories and compares the files.
-        private static void TraverseTree(Tree tree, string currentPath, List<string> localDirectories, List<string> localFiles, ref List<string> missingDirectories, ref List<string> missingFiles)
-        {
-            foreach (var entry in tree)
-            {
-                if (entry.TargetType == TreeEntryTargetType.Blob)
-                {
-                    // Check for missing files
-                    var fullPath = Path.Combine(currentPath, entry.Path);
-                    if (!localFiles.Contains(entry.Path))
-                    {
-                        missingFiles.Add(entry.Path);
-                    }
-                }
-                else if (entry.TargetType == TreeEntryTargetType.Tree)
-                {
-                    // Check for missing directories
-                    var fullPath = Path.Combine(currentPath, entry.Path);
-                    if (!localDirectories.Contains(entry.Path))
-                    {
-                        missingDirectories.Add(entry.Path);
-                    }
-
-                    // Recursively traverse the subdirectory
-                    var subTree = (Tree)entry.Target;
-                    TraverseTree(subTree, fullPath, localDirectories, localFiles, ref missingDirectories, ref missingFiles);
-                }
-            }
         }
 
 

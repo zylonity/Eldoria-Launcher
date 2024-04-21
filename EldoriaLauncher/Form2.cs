@@ -17,22 +17,7 @@ namespace EldoriaLauncher
             InitializeComponent();
         }
 
-        private void progressBar1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void DownloadBigLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void DownloadBigLabel_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar1_Click_1(object sender, EventArgs e)
+        private void CurrentDownload_Click(object sender, EventArgs e)
         {
 
         }
