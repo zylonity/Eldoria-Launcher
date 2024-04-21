@@ -349,6 +349,7 @@ namespace EldoriaLauncher
             Settings settings = new Settings();
             settings.Activate();
             settings.Show();
+            settings.Location = this.Location;
             this.Hide();
             settings.Update();
         }

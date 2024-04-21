@@ -39,8 +39,10 @@ namespace EldoriaLauncher
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             this.Close();
+            mainForm.Location = this.Location;
             mainForm.Show();
             mainForm.PlayActive();
+            
         }
 
         //Move window

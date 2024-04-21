@@ -94,7 +94,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Settings";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.Manual;
             Text = "Settings";
             MouseDown += Settings_MouseDown;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
