@@ -28,94 +28,78 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.RamBox = new System.Windows.Forms.ComboBox();
-            this.OfflineUsernameBox = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
+            RamBox = new ComboBox();
+            OfflineUsernameBox = new TextBox();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
             // 
             // RamBox
             // 
-            this.RamBox.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.RamBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.RamBox.DisplayMember = "1";
-            this.RamBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RamBox.Font = new System.Drawing.Font("Minecraft", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RamBox.ForeColor = System.Drawing.Color.White;
-            this.RamBox.FormattingEnabled = true;
-            this.RamBox.Items.AddRange(new object[] {
-            "2048 Mb",
-            "3072 Mb",
-            "4096 Mb",
-            "5120 Mb",
-            "6144 Mb",
-            "7168 Mb",
-            "8192 Mb",
-            "9216 Mb",
-            "10240 Mb",
-            "11264 Mb",
-            "12288 Mb",
-            "13312 Mb",
-            "14336 Mb",
-            "15360 Mb",
-            "16384 Mb",
-            "17408 Mb",
-            "18432 Mb",
-            "19456 Mb",
-            "20480 Mb"});
-            this.RamBox.Location = new System.Drawing.Point(267, 212);
-            this.RamBox.Name = "RamBox";
-            this.RamBox.Size = new System.Drawing.Size(281, 24);
-            this.RamBox.TabIndex = 2;
-            this.RamBox.Text = "2048 Mb";
-            this.RamBox.SelectedIndexChanged += new System.EventHandler(this.RamBox_SelectedIndexChanged);
+            RamBox.AccessibleRole = AccessibleRole.None;
+            RamBox.BackColor = Color.FromArgb(110, 110, 110);
+            RamBox.DisplayMember = "1";
+            RamBox.FlatStyle = FlatStyle.Flat;
+            RamBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RamBox.ForeColor = Color.White;
+            RamBox.FormattingEnabled = true;
+            RamBox.Items.AddRange(new object[] { "2048 Mb", "3072 Mb", "4096 Mb", "5120 Mb", "6144 Mb", "7168 Mb", "8192 Mb", "9216 Mb", "10240 Mb", "11264 Mb", "12288 Mb", "13312 Mb", "14336 Mb", "15360 Mb", "16384 Mb", "17408 Mb", "18432 Mb", "19456 Mb", "20480 Mb" });
+            RamBox.Location = new Point(262, 210);
+            RamBox.Margin = new Padding(4, 3, 4, 3);
+            RamBox.Name = "RamBox";
+            RamBox.Size = new Size(289, 28);
+            RamBox.TabIndex = 2;
+            RamBox.Text = "2048 Mb";
+            RamBox.SelectedIndexChanged += RamBox_SelectedIndexChanged;
             // 
             // OfflineUsernameBox
             // 
-            this.OfflineUsernameBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.OfflineUsernameBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.OfflineUsernameBox.Font = new System.Drawing.Font("Minecraft", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OfflineUsernameBox.ForeColor = System.Drawing.Color.White;
-            this.OfflineUsernameBox.Location = new System.Drawing.Point(267, 112);
-            this.OfflineUsernameBox.Name = "OfflineUsernameBox";
-            this.OfflineUsernameBox.Size = new System.Drawing.Size(281, 18);
-            this.OfflineUsernameBox.TabIndex = 4;
-            this.OfflineUsernameBox.Text = "AAA";
-            this.OfflineUsernameBox.TextChanged += new System.EventHandler(this.OfflineUsernameBox_TextChanged);
+            OfflineUsernameBox.BackColor = Color.FromArgb(110, 110, 110);
+            OfflineUsernameBox.BorderStyle = BorderStyle.None;
+            OfflineUsernameBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OfflineUsernameBox.ForeColor = Color.White;
+            OfflineUsernameBox.Location = new Point(262, 107);
+            OfflineUsernameBox.Margin = new Padding(4, 3, 4, 3);
+            OfflineUsernameBox.Name = "OfflineUsernameBox";
+            OfflineUsernameBox.Size = new Size(289, 19);
+            OfflineUsernameBox.TabIndex = 4;
+            OfflineUsernameBox.Text = "AAA";
+            OfflineUsernameBox.TextChanged += OfflineUsernameBox_TextChanged;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = global::EldoriaLauncher.Properties.Resources.atrás;
-            this.pictureBox1.Location = new System.Drawing.Point(25, 16);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            pictureBox1.BackColor = Color.Transparent;
+            pictureBox1.Cursor = Cursors.Hand;
+            pictureBox1.Image = Properties.Resources.atrás;
+            pictureBox1.Location = new Point(24, 15);
+            pictureBox1.Margin = new Padding(4, 3, 4, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(23, 23);
+            pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
+            pictureBox1.TabIndex = 5;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // Settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::EldoriaLauncher.Properties.Resources.menu_gui;
-            this.ClientSize = new System.Drawing.Size(816, 489);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.OfflineUsernameBox);
-            this.Controls.Add(this.RamBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "Settings";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Settings";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Settings_MouseDown);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.menu_gui;
+            ClientSize = new Size(816, 489);
+            Controls.Add(pictureBox1);
+            Controls.Add(OfflineUsernameBox);
+            Controls.Add(RamBox);
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "Settings";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Settings";
+            MouseDown += Settings_MouseDown;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

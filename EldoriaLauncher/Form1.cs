@@ -22,6 +22,17 @@ using static System.Net.WebRequestMethods;
 using System.Diagnostics;
 using System.Threading;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using Modrinth;
+using Modrinth.Exceptions;
+using System.Net;
+using System.Net.Http;
+using Modrinth.Helpers;
+using Modrinth.Extensions;
+using Modrinth.Endpoints.Project;
+using Modrinth.Models;
+using System.Runtime.Intrinsics.Arm;
+using static System.Windows.Forms.Design.AxImporter;
+using CmlLib.Core.Version;
 
 namespace EldoriaLauncher
 {
@@ -39,221 +50,86 @@ namespace EldoriaLauncher
         Downloading downloadWindow;
 
 
+
         //Currently only checks for the initial download, if files are missing then download everything from the repo
         async Task CheckUpdates()
         {
+            var options = new ModrinthClientConfig
+            {
+                ModrinthToken = "mrp_p2f98ush9bEkhnAlCuDQCXP5GYj4IFdQGcsPXKn1top3lIgZRl13YicOCmuz",
+                UserAgent = "Eldoria"
+            };
+
+            var client = new ModrinthClient(options);
+            var project = await client.Project.GetAsync("Eldoria");
+            var dp = await client.Project.GetDependenciesAsync(project.Slug);
+            MessageBox.Show(dp.Versions[0].Files[0].Url);
+            int progressBar = 0;
+            int numberOfDownloads = dp.Projects.Length;
+
+            //await Task.Run(async () =>
+            //{
+            //    for (int i = 1; i <= numberOfDownloads; i++)
+            //    {
+
+            //        using (WebClient wc = new WebClient())
+            //        {
+
+            //            // Move the declaration inside the loop
+            //            int downloadNumber = i;
+
+            //            var progress = new Progress<DownloadProgress>(dp => ReportProgress(dp.Percent, downloadNumber, dp.ExpectedSize, stopwatch.Elapsed, dp.TotalBytesRead));
+
+            //            // Offload the download operation to a separate thread
+            //            await wc.DownloadFileAsync(dp.Projects[i].Url, dp.Projects[i]., verPath, progress, downloadNumber);
+            //        }
+            //    }
+            //});
+
+            //WebClient wc = new WebClient();
+            //await Task.Run(() => {
+            //    wc.DownloadFileAsync(new Uri(dp.Projects[0].Url), project.Title);
+            //    wc.DownloadProgressChanged += (s, e) =>
+            //    {
+            //        progressBar = e.ProgressPercentage;
+            //    };
+            //    label1.Text = progressBar.ToString();
+
+            //});
+            
+            
+            
+
+            if (!Directory.Exists(verPath))
+            {
+
+
+            }
             try
             {
-                if (Directory.Exists(verPath))
-                {
-                    if (validateFiles)
-                    {
-                        using (var repo = new Repository(verPath))
-                        {
-                            // Fetch the remote branch and its tree
-                            var remoteBranch = repo.Branches["main"];
-                            var remoteCommit = repo.Lookup<Commit>(remoteBranch.Tip.Sha);
-                            var remoteTree = remoteCommit.Tree;
 
-                            // Get the directories and files in the local directory and its subdirectories
-                            var localDirectories = Directory.GetDirectories(verPath, "*", SearchOption.AllDirectories)
-                                .Select(path => GetRelativePath(verPath, path))
-                                .ToList();
-                            var localFiles = Directory.GetFiles(verPath, "*", SearchOption.AllDirectories)
-                                .Select(path => GetRelativePath(verPath, path))
-                                .ToList();
-
-                            // Traverse the remote tree recursively, checking for missing directories and files
-                            var missingDirectories = new List<string>();
-                            var missingFiles = new List<string>();
-                            TraverseTree(remoteTree, verPath, localDirectories, localFiles, ref missingDirectories, ref missingFiles);
-
-                            // Print out the missing directories and files
-                            foreach (var directory in missingDirectories)
-                            {
-                                Console.WriteLine($"Missing directory: {directory}");
-                            }
-                            foreach (var file in missingFiles)
-                            {
-                                Console.WriteLine($"Missing file: {file}");
-                            }
-                        }
-                    }
-
-
-                    string logMessage = "";
-                    using (var repo = new Repository(verPath))
-                    {
-                        var remote = repo.Network.Remotes["origin"];
-                        var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
-                        Commands.Fetch(repo, remote.Name, refSpecs, null, logMessage);
-
-                        var updates = repo.Diff.Compare<TreeChanges>(repo.Head.Tip.Tree, repo.Branches[repo.Head.FriendlyName].TrackedBranch.Tip.Tree);
-
-                        if (updates.Count > 0)
-                        {
-                            updating = true;
-
-                            Downloading updateWindow = new Downloading();
-                            updateWindow.Text = "Actualizando";
-                            updateWindow.DownloadBigLabel.Text = "Actualizando...";
-                            updateWindow.progressBar1.Hide();
-                            updateWindow.Show();
-                            updateWindow.Update();
-                            updateWindow.TopMost = true;
-
-                            foreach (var update in updates)
-                            {
-                                if (update.Status == ChangeKind.Added)
-                                {
-                                    if (System.IO.File.Exists(verPath + "\\" + update.Path))
-                                    {
-                                        System.IO.File.Delete(verPath + "\\" + update.Path);
-                                    }
-
-                                }
-                            }
-
-
-                            MergeResult mergeResult;
-                            Signature merger = new Signature("Algun Player", "you@example.com", DateTimeOffset.Now);
-                            try
-                            {
-                                mergeResult = repo.Merge(repo.Branches[repo.Head.FriendlyName].TrackedBranch, merger);
-
-
-                                if (mergeResult.Status == MergeStatus.Conflicts)
-                                {
-                                    foreach (var conflict in repo.Index.Conflicts)
-                                    {
-                                        Commands.Checkout(repo, conflict.Theirs.Path, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-                                    }
-
-                                    Commit mergeCommit = repo.Commit("Merge commit", merger, merger);
-                                }
-
-                                if (mergeResult.Status != MergeStatus.UpToDate)
-                                {
-                                    // Post UI updates back to the UI thread
-                                    updateWindow.BeginInvoke((Action)(() =>
-                                    {
-                                        updateWindow.Close();
-                                        updateWindow.Hide();
-
-                                    }));
-
-                                }
-
-
-                            }
-                            catch (LibGit2SharpException ex)
-                            {
-                                MessageBox.Show(ex.Message);
-                                repo.Reset(ResetMode.Hard);
-                                mergeResult = repo.Merge(repo.Branches[repo.Head.FriendlyName].TrackedBranch, merger);
-
-                                if (mergeResult.Status == MergeStatus.Conflicts)
-                                {
-                                    foreach (var conflict in repo.Index.Conflicts)
-                                    {
-                                        Commands.Checkout(repo, conflict.Theirs.Path, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-                                    }
-
-                                    Commit mergeCommit = repo.Commit("Merge commit", merger, merger);
-                                }
-
-                                if (mergeResult.Status != MergeStatus.UpToDate)
-                                {
-                                    // Post UI updates back to the UI thread
-                                    updateWindow.BeginInvoke((Action)(() =>
-                                    {
-                                        updateWindow.Close();
-                                        updateWindow.Hide();
-
-
-                                    }));
-
-                                }
-
-
-                            }
-
-                            if (mergeResult.Status == MergeStatus.Conflicts)
-                            {
-                                foreach (var conflict in repo.Index.Conflicts)
-                                {
-                                    Commands.Checkout(repo, conflict.Theirs.Path, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-                                }
-
-                                Commit mergeCommit = repo.Commit("Merge commit", merger, merger);
-                            }
-
-                            updating = false;
-                            updateWindow.BeginInvoke((Action)(() =>
-                            {
-                                PlayActive();
-                                updateWindow.Hide();
-                                updateWindow.Close();
-
-                            }));
-                        }
-
-                    }
-                    Console.WriteLine(logMessage);
-
-                }
-                else
-                {
-                    updating = true;
-                    downloadWindow = new Downloading();
-                    downloadWindow.Show();
-                    downloadWindow.Update();
-                    await InitialClone();
-                    downloadWindow.Close();
-                    updating = false;
-                    PlayActive();
-
-                }
             }
-            catch (Exception exx)
+            catch (ModrinthApiException e)
             {
-                MessageBox.Show(exx.Message);
-
+                MessageBox.Show($"API call failed with status code {e.InnerException}");
             }
+            catch (System.AggregateException f)
+            {
+                MessageBox.Show($"{f.InnerException}");
+            }
+
+
+
+
 
         }
+
 
         //Clones everything
         async Task InitialClone()
         {
-            downloadWindow.TopMost = true;
-            float percentDone;
-            float previousPercentDone = 0;
 
-            var cOptions = new CloneOptions
-            {
-                //Parameters to check for progress
-                //OnTransferProgress = progress =>
-                //{
-                //    percentDone = ((float)progress.IndexedObjects / (float)progress.TotalObjects * 100.0f);
-                //    if ((int)percentDone > previousPercentDone)
-                //    {
-                //        previousPercentDone = (int)percentDone;
 
-                //        // Update progress bar on UI thread
-                //        downloadWindow.Invoke((Action)(() =>
-                //        {
-                //            downloadWindow.progressBar1.Value = (int)percentDone;
-                //            downloadWindow.progressBar1.Update();
-                //        }));
-                //    }
-
-                //    return true;
-                //},
-            };
-
-            // Run clone in separate task
-            await Task.Run(() => Repository.Clone(sRepo, verPath, cOptions));
         }
 
         public void PlayActive()
@@ -474,11 +350,15 @@ namespace EldoriaLauncher
         {
 
             Settings settings = new Settings();
-            //settings.Activate();
-            //settings.Show();
+            settings.Activate();
+            settings.Show();
             this.Hide();
-            //settings.Update();
+            settings.Update();
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
