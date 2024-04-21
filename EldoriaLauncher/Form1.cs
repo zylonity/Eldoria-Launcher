@@ -13,6 +13,7 @@ using CmlLib.Core.Installer.FabricMC;
 using CmlLib.Core.Downloader;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
+using EldoriaLauncher.Properties;
 
 
 namespace EldoriaLauncher
@@ -35,6 +36,9 @@ namespace EldoriaLauncher
         bool updating = false;
 
         bool downloadFilesAsync = true;
+
+        Dictionary<string, string> installModList = new Dictionary<string, string>();
+
 
         async Task InstallFabric(Downloading downloading)
         {
@@ -80,7 +84,12 @@ namespace EldoriaLauncher
 
             downloading.DownloadBigLabel.Text = "Descargando Mods";
 
-            //Download all the mods
+            for (int i = 0; i < dp.Projects.Length; i++)
+            { 
+                installModList.Add(dp.Projects[i].Title, dp.Versions[i].Files[0].Url);
+            }
+
+                //Download all the mods
             for (int i = 0; i < dp.Projects.Length; i++)
             {
                 string filename = dp.Versions[i].Files[0].FileName;
@@ -139,23 +148,28 @@ namespace EldoriaLauncher
                 System.IO.Directory.CreateDirectory(modsPath);
 
                 //Open installing window
-                Downloading downloading = new Downloading();
-                downloading.Activate();
-                downloading.Show();
-                downloading.TopMost = true;
+                //Downloading downloading = new Downloading();
+                //downloading.Activate();
+                //downloading.Show();
+                //downloading.TopMost = true;
 
-                await InstallFabric(downloading);
+                ////await InstallFabric(downloading);
 
-                await InstallMods(downloading);
+                //await InstallMods(downloading);
 
-                if (downloadFilesAsync == false)
-                {
-                    downloading.Close();
-                    updating = false;
-                    PlayActive();
-                }
+                //if (downloadFilesAsync == false)
+                //{
+                //    downloading.Close();
+                //    updating = false;
+                //    PlayActive();
+                //}
 
-
+                Installer installer = new Installer();
+                installer.Activate();
+                installer.Show();
+                installer.Location = this.Location;
+                this.Hide();
+                installer.Update();
             }
 
 
@@ -345,13 +359,18 @@ namespace EldoriaLauncher
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-
-            Settings settings = new Settings();
-            settings.Activate();
-            settings.Show();
-            settings.Location = this.Location;
+            Installer installer = new Installer();
+            installer.Activate();
+            installer.Show();
+            installer.Location = this.Location;
             this.Hide();
-            settings.Update();
+            installer.Update();
+            //Settings settings = new Settings();
+            //settings.Activate();
+            //settings.Show();
+            //settings.Location = this.Location;
+            //this.Hide();
+            //settings.Update();
         }
 
         private void label1_Click(object sender, EventArgs e)
