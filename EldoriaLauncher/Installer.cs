@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.Devices;
 using Modrinth;
 using Modrinth.Endpoints.Project;
+using Modrinth.Exceptions;
 using Modrinth.Models;
 using System;
 using System.Collections.Generic;
@@ -45,14 +46,32 @@ namespace EldoriaLauncher
             button1.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
 
+            var userAgent = new UserAgent
+            {
+                ProjectName = "Eldoria-Launcher",
+                ProjectVersion = "1.0.0",
+                GitHubUsername = "zylonity",
+                Contact = "kkhaleelkk505@gmail.com"
+            };
+
             options = new ModrinthClientConfig
             {
-                ModrinthToken = "mrp_p2f98ush9bEkhnAlCuDQCXP5GYj4IFdQGcsPXKn1top3lIgZRl13YicOCmuz",
-                UserAgent = "Eldoria"
+                UserAgent = userAgent.ToString()
             };
 
             client = new ModrinthClient(options);
-            project = await client.Project.GetAsync("Eldoria");
+            
+
+            try
+            {
+                project = await client.Project.GetAsync("Eldoria");
+            }
+            // Or you can catch the exception and handle all non-200 status codes
+            catch (ModrinthApiException e)
+            {
+                MessageBox.Show("Error: " + e.InnerException);
+            }
+
             dp = await client.Project.GetDependenciesAsync(project.Slug);
 
             //Set up dictionary with file name and url
