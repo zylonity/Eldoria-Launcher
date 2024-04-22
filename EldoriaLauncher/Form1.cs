@@ -23,166 +23,10 @@ namespace EldoriaLauncher
         string offlineUsername = (string)Properties.Settings.Default["Username"];
         int ram = (int)Properties.Settings.Default["Ram"];
         string mcVer = "fabric-loader-0.15.10-1.20.1";
-
-        MinecraftPath mcPath;
         string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
-
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
-
-        CMLauncher launcher;
         
-
-        bool validateFiles = false;
         bool updating = false;
-
-        bool downloadFilesAsync = true;
-
-        Dictionary<string, string> installModList = new Dictionary<string, string>();
-
-
-        async Task InstallFabric(Downloading downloading)
-        {
-            mcPath = new MinecraftPath(mcPathStr);
-            launcher = new CMLauncher(mcPath);
-
-            downloading.DownloadBigLabel.Text = "Descargando Frabic";
-            downloading.progressBar1.Visible = false;
-            downloading.progressBar2.Visible = false;
-            downloading.CurrentDownload.Visible = false;
-
-            // initialize fabric version loader
-            var fabricVersionLoader = new FabricVersionLoader();
-            var fabricVersions = await fabricVersionLoader.GetVersionMetadatasAsync();
-
-            // install
-            var fabric = fabricVersions.GetVersionMetadata(mcVer);
-
-            await fabric.SaveAsync(mcPath);
-            
-
-            await launcher.GetAllVersionsAsync();
-            downloading.progressBar1.Visible = true;
-            downloading.progressBar2.Visible = true;
-            downloading.CurrentDownload.Visible = true;
-        }
-
-        async Task InstallMods(Downloading downloading)
-        {
-            //Use my key whilst the modrinth is private, update useragent when public
-            var options = new ModrinthClientConfig
-            {
-                ModrinthToken = "mrp_p2f98ush9bEkhnAlCuDQCXP5GYj4IFdQGcsPXKn1top3lIgZRl13YicOCmuz",
-                UserAgent = "Eldoria"
-            };
-
-            var client = new ModrinthClient(options);
-            var project = await client.Project.GetAsync("Eldoria");
-            var dp = await client.Project.GetDependenciesAsync(project.Slug);
-
-            float itemsToDownload = dp.Projects.Length - 1;
-            float itemsDownloaded = 0;
-
-            downloading.DownloadBigLabel.Text = "Descargando Mods";
-
-            for (int i = 0; i < dp.Projects.Length; i++)
-            { 
-                installModList.Add(dp.Projects[i].Title, dp.Versions[i].Files[0].Url);
-            }
-
-                //Download all the mods
-            for (int i = 0; i < dp.Projects.Length; i++)
-            {
-                string filename = dp.Versions[i].Files[0].FileName;
-
-                int x = i;
-                if (i + 1 < dp.Projects.Length)
-                    x = i + 1;
-
-                string nextFileName = dp.Versions[x].Files[0].FileName;
-
-                WebClient webClient = new WebClient();
-                webClient.DownloadProgressChanged += (s, e) =>
-                {
-                    downloading.progressBar2.Value = e.ProgressPercentage;
-                    downloading.progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
-                };
-                webClient.DownloadFileCompleted += (s, e) =>
-                {
-                    itemsDownloaded++;
-                    downloading.CurrentDownload.Text = nextFileName;
-
-                    if ((int)itemsDownloaded == (dp.Projects.Length))
-                    {
-                        downloading.DownloadBigLabel.Text = "DONE";
-                        downloading.Close();
-                        updating = false;
-                        PlayActive();
-                    }
-                };
-
-
-                if(downloadFilesAsync == false)
-                {
-                    await webClient.DownloadFileTaskAsync(new Uri(dp.Versions[i].Files[0].Url), modsPath + "\\" + filename);
-                }
-                else
-                {
-                    webClient.DownloadFileAsync(new Uri(dp.Versions[i].Files[0].Url), modsPath + "\\" + filename);
-                }
-
-
-
-
-            }
-        }
-
-
-        //Currently only checks for the initial download, if files are missing then download everything from the repo
-        async Task FirstDownload()
-        {
-
-
-            if (!Directory.Exists(mcPathStr))
-            {
-                updating = true;
-                System.IO.Directory.CreateDirectory(modsPath);
-
-                //Open installing window
-                //Downloading downloading = new Downloading();
-                //downloading.Activate();
-                //downloading.Show();
-                //downloading.TopMost = true;
-
-                ////await InstallFabric(downloading);
-
-                //await InstallMods(downloading);
-
-                //if (downloadFilesAsync == false)
-                //{
-                //    downloading.Close();
-                //    updating = false;
-                //    PlayActive();
-                //}
-
-                Installer installer = new Installer();
-                installer.Activate();
-                installer.Show();
-                installer.Location = this.Location;
-                this.Hide();
-                installer.Update();
-            }
-
-
-        }
-
-
-        //Clones everything
-        async Task InitialClone()
-        {
-
-
-        }
-
         public void PlayActive()
         {
 
@@ -213,33 +57,55 @@ namespace EldoriaLauncher
         }
 
 
-
-
-
-
-
         //Initialises everything
         public Form1()
         {
-            FirstDownload();
             InitializeComponent();
             pictureBox1_EnabledChanged();
             PlayActive();
         }
 
+        private void Downloader_FileChanged(DownloadFileChangedEventArgs e)
+        {
+            Console.WriteLine("FileKind: " + e.FileKind.ToString());
+            Console.WriteLine("FileName: " + e.FileName);
+            Console.WriteLine("TotalFileCount: " + e.TotalFileCount);
+            Console.WriteLine("ProgressedFiles: " + e.ProgressedFileCount);
+        }
 
+        private void Downloader_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            Console.WriteLine("{0}%", e.ProgressPercentage);
+            RunBar.Value = e.ProgressPercentage;
+        }
 
         //Pressing play in offline mode
+
+        
 
         private async void pictureBox1_Click(object sender, EventArgs e)
         {
             pictureBox1.Enabled = false;
+            RunBar.Visible = true;
             Cursor.Current = Cursors.WaitCursor;
 
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
 
             ram = (int)Properties.Settings.Default["Ram"];
 
+            var path = new MinecraftPath(mcPathStr);
+            var launcher = new CMLauncher(path);
+
+            launcher.FileChanged += Downloader_FileChanged;
+            launcher.ProgressChanged += Downloader_ProgressChanged;
+
+            // initialize fabric version loader
+            var fabricVersionLoader = new FabricVersionLoader();
+            var fabricVersions = await fabricVersionLoader.GetVersionMetadatasAsync();
+
+            //install
+            var fabric = fabricVersions.GetVersionMetadata(mcVer);
+            await fabric.SaveAsync(path);
 
             // update version list
             await launcher.GetAllVersionsAsync();
@@ -251,13 +117,26 @@ namespace EldoriaLauncher
                 Session = MSession.GetOfflineSession(offlineUsername),
             });
 
-            process.Start();
+            //process.StartInfo.RedirectStandardError = true;
+            //process.StartInfo.RedirectStandardOutput = true;
+            //process.EnableRaisingEvents = true;
+            //process.ErrorDataReceived += (s, e) => Logging(e.Data, true);
+            //process.OutputDataReceived += (s, e) => Logging(e.Data, false);
 
-            this.WindowState = FormWindowState.Minimized;
-            Cursor.Current = Cursors.Arrow;
-            process.WaitForExit();
+            //process.Start();
+            //process.BeginErrorReadLine();
+            //process.BeginOutputReadLine();
+
+            Logging logger = new Logging();
+            logger.Activate();
+            logger.Show();
+            this.Hide();
+            await logger.StartMinecraft(process);
+
+            await process.WaitForExitAsync();
+            this.Show();
             pictureBox1.Enabled = true;
-            this.WindowState = FormWindowState.Normal;
+            RunBar.Visible = false;
         }
 
 
@@ -359,18 +238,12 @@ namespace EldoriaLauncher
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            Installer installer = new Installer();
-            installer.Activate();
-            installer.Show();
-            installer.Location = this.Location;
+            Settings settings = new Settings();
+            settings.Activate();
+            settings.Show();
+            settings.Location = this.Location;
             this.Hide();
-            installer.Update();
-            //Settings settings = new Settings();
-            //settings.Activate();
-            //settings.Show();
-            //settings.Location = this.Location;
-            //this.Hide();
-            //settings.Update();
+            settings.Update();
         }
 
         private void label1_Click(object sender, EventArgs e)

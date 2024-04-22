@@ -1,4 +1,5 @@
-﻿using Modrinth;
+﻿using Microsoft.VisualBasic.Devices;
+using Modrinth;
 using Modrinth.Endpoints.Project;
 using Modrinth.Models;
 using System;
@@ -8,25 +9,31 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 using static System.Windows.Forms.Design.AxImporter;
 
 namespace EldoriaLauncher
 {
     public partial class Installer : Form
     {
+
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
+
+        bool downloadAsync = false;
 
         ModrinthClient client;
         ModrinthClientConfig options;
         Project project;
         Dependencies dp;
 
-        Dictionary<string, string> installModList = new Dictionary<string, string>();
+        Dictionary<string, Tuple<string, string>> installModList = new Dictionary<string, Tuple<string, string>>();
 
-        Form1 mainForm = Application.OpenForms.OfType<Form1>().Single();
+        
         public Installer()
         {
             InitializeComponent();
@@ -35,6 +42,9 @@ namespace EldoriaLauncher
 
         async Task GetMods()
         {
+            button1.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+
             options = new ModrinthClientConfig
             {
                 ModrinthToken = "mrp_p2f98ush9bEkhnAlCuDQCXP5GYj4IFdQGcsPXKn1top3lIgZRl13YicOCmuz",
@@ -45,19 +55,26 @@ namespace EldoriaLauncher
             project = await client.Project.GetAsync("Eldoria");
             dp = await client.Project.GetDependenciesAsync(project.Slug);
 
+            //Set up dictionary with file name and url
             for (int i = 0; i < dp.Projects.Length; i++)
             {
-                installModList.Add(dp.Projects[i].Title, dp.Versions[i].Files[0].Url);
+                installModList.Add(dp.Projects[i].Title, new Tuple<string, string>(dp.Versions[i].Files[0].FileName, dp.Versions[i].Files[0].Url));
             }
 
             for (int i = 0; i < dp.Projects.Length; i++)
             {
-                checkedListBox1.Items.Add(dp.Projects[i].Title);
+                checkedListBox1.Items.Add(dp.Projects[i].Title, true);
+
             }
+            button1.Enabled = true;
+            Cursor.Current = Cursors.Default;
         }
 
-        async Task InstallMods(Downloading downloading)
+        async Task InstallMods()
         {
+            Cursor.Current = Cursors.WaitCursor;
+            System.IO.Directory.CreateDirectory(modsPath);
+
             //Use my key whilst the modrinth is private, update useragent when public
             var options = new ModrinthClientConfig
             {
@@ -65,20 +82,17 @@ namespace EldoriaLauncher
                 UserAgent = "Eldoria"
             };
 
-            
-            
-
-            float itemsToDownload = dp.Projects.Length - 1;
+            float itemsToDownload = checkedListBox1.CheckedItems.Count - 1;
             float itemsDownloaded = 0;
 
-            downloading.DownloadBigLabel.Text = "Descargando Mods";
-
-            
+            downloadAsync = checkBox1.Checked;
 
             //Download all the mods
-            for (int i = 0; i < dp.Projects.Length; i++)
+            for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
             {
-                string filename = dp.Versions[i].Files[0].FileName;
+
+                string filename = installModList[checkedListBox1.CheckedItems[i].ToString()].Item1;
+                string downloadUrl = installModList[checkedListBox1.CheckedItems[i].ToString()].Item2;
 
                 int x = i;
                 if (i + 1 < dp.Projects.Length)
@@ -89,37 +103,41 @@ namespace EldoriaLauncher
                 WebClient webClient = new WebClient();
                 webClient.DownloadProgressChanged += (s, e) =>
                 {
-                    downloading.progressBar2.Value = e.ProgressPercentage;
-                    downloading.progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
+                    progressBar2.Value = e.ProgressPercentage;
+                    progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
                 };
                 webClient.DownloadFileCompleted += (s, e) =>
                 {
                     itemsDownloaded++;
-                    downloading.CurrentDownload.Text = nextFileName;
+                    currentDownload.Text = nextFileName;
 
-                    if ((int)itemsDownloaded == (dp.Projects.Length))
+                    if (downloadAsync && (int)itemsDownloaded == (itemsToDownload + 1))
                     {
-                        downloading.DownloadBigLabel.Text = "DONE";
-                        downloading.Close();
+                        Application.Restart();
                     }
                 };
 
 
-                webClient.DownloadFileAsync(new Uri(dp.Versions[i].Files[0].Url), modsPath + "\\" + filename);
+                if (downloadAsync)
+                {
+                    webClient.DownloadFileAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+                }
+                else
+                {
+                    await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+                }
+
 
 
 
 
             }
-        }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            mainForm.Location = this.Location;
-            mainForm.Show();
-            mainForm.PlayActive();
-
+            if (!downloadAsync)
+            {
+                Application.Restart();
+            }
+                
         }
 
         //Move window
@@ -147,7 +165,23 @@ namespace EldoriaLauncher
 
         private void button1_Click(object sender, EventArgs e)
         {
+            InstallMods();
+            button1.Enabled = false;
+        }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

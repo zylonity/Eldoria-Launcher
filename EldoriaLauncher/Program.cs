@@ -10,8 +10,18 @@ namespace EldoriaLauncher
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+            string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
+
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            if (!Directory.Exists(mcPathStr))
+            {
+
+                Application.Run(new Installer());
+            }
+            else
+            {
+                Application.Run(new Form1());
+            }
         }
     }
 }
