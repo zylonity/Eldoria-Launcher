@@ -70,5 +70,29 @@ namespace EldoriaLauncher.Properties {
                 this["RamIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.20.1")]
+        public string MinecraftVer {
+            get {
+                return ((string)(this["MinecraftVer"]));
+            }
+            set {
+                this["MinecraftVer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.15.10")]
+        public string FabricVer {
+            get {
+                return ((string)(this["FabricVer"]));
+            }
+            set {
+                this["FabricVer"] = value;
+            }
+        }
     }
 }

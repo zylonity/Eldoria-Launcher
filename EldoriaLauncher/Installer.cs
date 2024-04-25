@@ -2,6 +2,8 @@
 using Modrinth;
 using Modrinth.Endpoints.Project;
 using Modrinth.Exceptions;
+using Modrinth.Extensions;
+using Modrinth.Helpers;
 using Modrinth.Models;
 using System;
 using System.Collections.Generic;
@@ -17,12 +19,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using static System.Windows.Forms.Design.AxImporter;
+using System.IO.Compression;
+using EldoriaLauncher.MrPack;
+using System.Text.Json;
 
 namespace EldoriaLauncher
 {
     public partial class Installer : Form
     {
-
+        string eldoriaPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
 
         bool downloadAsync = false;
@@ -30,8 +35,10 @@ namespace EldoriaLauncher
         ModrinthClient client;
         ModrinthClientConfig options;
         Project project;
-        Dependencies dp;
-
+        Modrinth.Models.Version version;
+        Dependency[] verDependencies;
+        Modrinth.Endpoints.Project.Dependencies projDependencies;
+        ModIndex eldoriaIndex;
         Dictionary<string, Tuple<string, string>> installModList = new Dictionary<string, Tuple<string, string>>();
 
         
@@ -45,6 +52,7 @@ namespace EldoriaLauncher
         {
             button1.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
+            System.IO.Directory.CreateDirectory(modsPath);
 
             var userAgent = new UserAgent
             {
@@ -72,19 +80,74 @@ namespace EldoriaLauncher
                 MessageBox.Show("Error: " + e.InnerException);
             }
 
-            dp = await client.Project.GetDependenciesAsync(project.Slug);
 
-            //Set up dictionary with file name and url
-            for (int i = 0; i < dp.Projects.Length; i++)
+            version = await client.Version.GetAsync(project.Versions[project.Versions.Length - 1]);
+
+            WebClient webClient = new WebClient();
+            webClient.DownloadProgressChanged += (s, e) =>
             {
-                installModList.Add(dp.Projects[i].Title, new Tuple<string, string>(dp.Versions[i].Files[0].FileName, dp.Versions[i].Files[0].Url));
+                progressBar1.Value = e.ProgressPercentage;
+            };
+            webClient.DownloadFileCompleted += (s, e) =>
+            {
+
+            };
+
+            //Download, extract, move files, and delete the zip file
+            label3.Text = "Descargando y extrayendo info";
+            await webClient.DownloadFileTaskAsync(new Uri(version.Files[0].Url), eldoriaPath + "\\" + version.Files[0].FileName + ".zip");
+
+            ZipFile.ExtractToDirectory(eldoriaPath + "\\" + version.Files[0].FileName + ".zip", eldoriaPath);
+
+            label3.Text = "Moviendo archivos";
+
+            foreach (var file in new DirectoryInfo(eldoriaPath + "\\overrides").GetFiles())
+            {
+                file.MoveTo($@"{eldoriaPath}\{file.Name}");
             }
 
-            for (int i = 0; i < dp.Projects.Length; i++)
+            foreach (var dir in new DirectoryInfo(eldoriaPath + "\\overrides").GetDirectories())
             {
-                checkedListBox1.Items.Add(dp.Projects[i].Title, true);
+                Directory.Move(dir.FullName, eldoriaPath + "\\" + dir.Name);
+            }
+
+            label3.Text = "Borrando archivos temporales";
+            System.IO.File.Delete(eldoriaPath + "\\" + version.Files[0].FileName + ".zip");
+
+            label3.Text = "Todo Hecho!";
+
+            //Enable install UI
+            checkedListBox1.Visible = true;
+            progressBar2.Visible = true;
+            currentDownload.Visible = true;
+            button1.Visible = true;
+            checkBox1.Visible = true;
+            label1.Visible = true;
+            label2.Visible = true;
+
+            //Deserialize json file
+            eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(eldoriaPath + "\\modrinth.index.json"));
+
+            //Update mc version and fabric version properties
+            Properties.Settings.Default["MinecraftVer"] = eldoriaIndex.dependencies.minecraft;
+            Properties.Settings.Default["FabricVer"] = eldoriaIndex.dependencies.fabric_loader;
+
+            //Filter the path names to just file names
+            for (int i = 0; i < eldoriaIndex.files.Length; i++)
+            {
+                eldoriaIndex.files[i].path = eldoriaIndex.files[i].path.Split("/")[1];
+            }
+
+
+            //Add all mods to the list
+            for (int i = 0; i < eldoriaIndex.files.Length; i++)
+            {
+
+                installModList.Add(eldoriaIndex.files[i].path, new Tuple<string, string>(eldoriaIndex.files[i].path, eldoriaIndex.files[i].downloads[0]));
+                checkedListBox1.Items.Add(eldoriaIndex.files[i].path, true);
 
             }
+
             button1.Enabled = true;
             Cursor.Current = Cursors.Default;
         }
@@ -94,11 +157,17 @@ namespace EldoriaLauncher
             Cursor.Current = Cursors.WaitCursor;
             System.IO.Directory.CreateDirectory(modsPath);
 
-            //Use my key whilst the modrinth is private, update useragent when public
-            var options = new ModrinthClientConfig
+            var userAgent = new UserAgent
             {
-                ModrinthToken = "mrp_p2f98ush9bEkhnAlCuDQCXP5GYj4IFdQGcsPXKn1top3lIgZRl13YicOCmuz",
-                UserAgent = "Eldoria"
+                ProjectName = "Eldoria-Launcher",
+                ProjectVersion = "1.1.0",
+                GitHubUsername = "zylonity",
+                Contact = "kkhaleelkk505@gmail.com"
+            };
+
+            options = new ModrinthClientConfig
+            {
+                UserAgent = userAgent.ToString()
             };
 
             float itemsToDownload = checkedListBox1.CheckedItems.Count - 1;
@@ -113,11 +182,12 @@ namespace EldoriaLauncher
                 string filename = installModList[checkedListBox1.CheckedItems[i].ToString()].Item1;
                 string downloadUrl = installModList[checkedListBox1.CheckedItems[i].ToString()].Item2;
 
+
                 int x = i;
-                if (i + 1 < dp.Projects.Length)
+                if (i + 1 < checkedListBox1.CheckedItems.Count)
                     x = i + 1;
 
-                string nextFileName = dp.Versions[x].Files[0].FileName;
+                string nextFileName = checkedListBox1.CheckedItems[x].ToString();
 
                 WebClient webClient = new WebClient();
                 webClient.DownloadProgressChanged += (s, e) =>
@@ -156,7 +226,7 @@ namespace EldoriaLauncher
             {
                 Application.Restart();
             }
-                
+
         }
 
         //Move window
@@ -198,9 +268,6 @@ namespace EldoriaLauncher
 
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
     }
+
 }

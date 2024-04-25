@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.Devices;
+﻿using CmlLib.Core.Files;
+using Microsoft.VisualBasic.Devices;
 using Modrinth;
 using Modrinth.Endpoints.Project;
 using Modrinth.Models;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Intrinsics.Arm;
@@ -16,24 +18,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.Design.AxImporter;
+using static System.Windows.Forms.LinkLabel;
 
 namespace EldoriaLauncher
 {
     public partial class Logging : Form
     {
-
-        string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
-
-        bool downloadAsync = false;
-
-        ModrinthClient client;
-        ModrinthClientConfig options;
-        Project project;
-        Dependencies dp;
-
-        Dictionary<string, Tuple<string, string>> installModList = new Dictionary<string, Tuple<string, string>>();
-
         
         public Logging()
         {
@@ -45,8 +37,8 @@ namespace EldoriaLauncher
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.EnableRaisingEvents = true;
-            process.ErrorDataReceived += (s, e) => WriteError(e.Data);
-            process.OutputDataReceived += (s, e) => WriteLog(e.Data);
+            process.ErrorDataReceived += (s, e) => WriteLog();
+            process.OutputDataReceived += (s, e) => WriteLog();
 
             process.Start();
             process.BeginErrorReadLine();
@@ -76,42 +68,47 @@ namespace EldoriaLauncher
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
-        public void WriteLog(string text)
+        string logFile = "";
+        public void WriteLog()
         {
-            if (LogBox.InvokeRequired)
-            {
-                LogBox.Invoke(new Action<string>(WriteLog), new object[] { text });
-            }
-            else
-            {
-                LogBox.SelectionStart = LogBox.TextLength;
-                LogBox.SelectionLength = 0;
-
-                LogBox.SelectionColor = Color.Black;
-                LogBox.AppendText(text + '\n');
-                LogBox.SelectionColor = LogBox.ForeColor;
-            }
-        }
-
-        public void WriteError(string text)
-        {
-            if (LogBox.InvokeRequired)
-            {
-                LogBox.Invoke(new Action<string>(WriteError), new object[] { text });
-            }
-            else
-            {
-                LogBox.SelectionStart = LogBox.TextLength;
-                LogBox.SelectionLength = 0;
-
-                LogBox.SelectionColor = Color.DarkRed;
-                LogBox.AppendText(text + '\n');
-                LogBox.SelectionColor = LogBox.ForeColor;
-            }
             
+            string path = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\logs\\latest.log";
+
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var sr = new StreamReader(fs, Encoding.Default))
+            {
+                string[] lines = sr.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                //logFile = sr.ReadToEnd();
+               
+                if(lines.Length > 0 && logFile != lines[lines.Length - 1])
+                {
+                    if (LogBox.InvokeRequired)
+                    {
+                        LogBox.Invoke(new Action(WriteLog), new object[] { logFile });
+                    }
+                    else
+                    {
+                        if (lines.Length > 0)
+                        {
+                            LogBox.SelectionStart = LogBox.TextLength;
+                            LogBox.SelectionLength = 0;
+
+                            LogBox.SelectionColor = Color.Black;
+                            LogBox.AppendText(lines[lines.Length - 1] + "\n");
+                            LogBox.SelectionColor = LogBox.ForeColor;
+                        }
+                    }
+                }
+
+                if (lines.Length > 0)
+                    logFile = lines[lines.Length - 1];
+
+            }
+
         }
+
     }
 }

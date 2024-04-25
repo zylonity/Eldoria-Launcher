@@ -14,5 +14,11 @@
     <Setting Name="RamIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="MinecraftVer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1.20.1</Value>
+    </Setting>
+    <Setting Name="FabricVer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0.15.10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

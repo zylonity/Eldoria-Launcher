@@ -36,8 +36,7 @@
             checkBox1 = new CheckBox();
             label1 = new Label();
             label2 = new Label();
-            pictureBox2 = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            label3 = new Label();
             SuspendLayout();
             // 
             // checkedListBox1
@@ -50,6 +49,7 @@
             checkedListBox1.Name = "checkedListBox1";
             checkedListBox1.Size = new Size(645, 310);
             checkedListBox1.TabIndex = 6;
+            checkedListBox1.Visible = false;
             checkedListBox1.SelectedIndexChanged += checkedListBox1_SelectedIndexChanged;
             // 
             // button1
@@ -60,6 +60,7 @@
             button1.TabIndex = 7;
             button1.Text = "Instalar Mods";
             button1.UseVisualStyleBackColor = true;
+            button1.Visible = false;
             button1.Click += button1_Click;
             // 
             // currentDownload
@@ -71,6 +72,7 @@
             currentDownload.Size = new Size(38, 15);
             currentDownload.TabIndex = 8;
             currentDownload.Text = "label1";
+            currentDownload.Visible = false;
             // 
             // progressBar1
             // 
@@ -85,6 +87,7 @@
             progressBar2.Name = "progressBar2";
             progressBar2.Size = new Size(160, 19);
             progressBar2.TabIndex = 10;
+            progressBar2.Visible = false;
             // 
             // checkBox1
             // 
@@ -96,6 +99,7 @@
             checkBox1.TabIndex = 11;
             checkBox1.Text = "Descargar con Async";
             checkBox1.UseVisualStyleBackColor = false;
+            checkBox1.Visible = false;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
             // label1
@@ -107,6 +111,7 @@
             label1.Size = new Size(132, 15);
             label1.TabIndex = 12;
             label1.Text = "decente y buen internet";
+            label1.Visible = false;
             label1.Click += label1_Click;
             // 
             // label2
@@ -118,19 +123,17 @@
             label2.Size = new Size(164, 15);
             label2.TabIndex = 13;
             label2.Text = "Recomendado si tienes un PC";
+            label2.Visible = false;
             // 
-            // pictureBox2
+            // label3
             // 
-            pictureBox2.BackColor = Color.Transparent;
-            pictureBox2.Cursor = Cursors.Hand;
-            pictureBox2.Image = Properties.Resources.cerrar;
-            pictureBox2.Location = new Point(780, 12);
-            pictureBox2.Margin = new Padding(4, 3, 4, 3);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(23, 23);
-            pictureBox2.TabIndex = 15;
-            pictureBox2.TabStop = false;
-            pictureBox2.Click += pictureBox2_Click;
+            label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
+            label3.Location = new Point(96, 365);
+            label3.Name = "label3";
+            label3.Size = new Size(38, 15);
+            label3.TabIndex = 16;
+            label3.Text = "label3";
             // 
             // Installer
             // 
@@ -138,7 +141,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.blank_gui;
             ClientSize = new Size(816, 489);
-            Controls.Add(pictureBox2);
+            Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(checkBox1);
@@ -155,7 +158,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Settings";
             MouseDown += Settings_MouseDown;
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -169,6 +171,6 @@
         private CheckBox checkBox1;
         private Label label1;
         private Label label2;
-        private PictureBox pictureBox2;
+        private Label label3;
     }
 }

@@ -103,6 +103,9 @@ namespace EldoriaLauncher
             var fabricVersionLoader = new FabricVersionLoader();
             var fabricVersions = await fabricVersionLoader.GetVersionMetadatasAsync();
 
+            //get version
+            mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
+
             //install
             var fabric = fabricVersions.GetVersionMetadata(mcVer);
             await fabric.SaveAsync(path);
