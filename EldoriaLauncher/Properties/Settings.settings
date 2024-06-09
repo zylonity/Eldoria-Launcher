@@ -20,5 +20,8 @@
     <Setting Name="FabricVer" Type="System.String" Scope="User">
       <Value Profile="(Default)">0.15.10</Value>
     </Setting>
+    <Setting Name="ModpackVer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

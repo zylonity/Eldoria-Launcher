@@ -1,4 +1,5 @@
-﻿using Modrinth;
+﻿using Microsoft.VisualBasic.Devices;
+using Modrinth;
 using Modrinth.Exceptions;
 using Modrinth.Models;
 using System.Net;
@@ -9,9 +10,10 @@ using System.Text.Json;
 
 namespace EldoriaLauncher
 {
-    public partial class Installer : Form
+    public partial class Updater : Form
     {
         string eldoriaPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
+        string tempUpdatePath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\Update";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
 
         bool downloadAsync = false;
@@ -24,18 +26,18 @@ namespace EldoriaLauncher
         ModIndex eldoriaIndex;
         Dictionary<string, Tuple<string, string>> installModList = new Dictionary<string, Tuple<string, string>>();
 
-        
-        public Installer()
+
+        public Updater()
         {
             InitializeComponent();
-            GetMods();
+            GetNewMods();
         }
 
-        async Task GetMods()
+        async Task GetNewMods()
         {
             button1.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
-            System.IO.Directory.CreateDirectory(modsPath);
+            System.IO.Directory.CreateDirectory(tempUpdatePath);
 
             userAgent = new UserAgent
             {
@@ -50,7 +52,7 @@ namespace EldoriaLauncher
             };
 
             client = new ModrinthClient(options);
-            
+
 
             try
             {
@@ -77,28 +79,78 @@ namespace EldoriaLauncher
 
             //Download, extract, move files, and delete the zip file
             label3.Text = "Descargando y extrayendo info";
-            await webClient.DownloadFileTaskAsync(new Uri(version.Files[0].Url), eldoriaPath + "\\" + version.Files[0].FileName + ".zip");
+            await webClient.DownloadFileTaskAsync(new Uri(version.Files[0].Url), tempUpdatePath + "\\" + version.Files[0].FileName + ".zip");
 
-            ZipFile.ExtractToDirectory(eldoriaPath + "\\" + version.Files[0].FileName + ".zip", eldoriaPath);
+            ZipFile.ExtractToDirectory(tempUpdatePath + "\\" + version.Files[0].FileName + ".zip", tempUpdatePath);
 
             label3.Text = "Moviendo archivos";
 
-            foreach (var file in new DirectoryInfo(eldoriaPath + "\\overrides").GetFiles())
+            foreach (var file in new DirectoryInfo(tempUpdatePath + "\\overrides").GetFiles())
             {
-                file.MoveTo($@"{eldoriaPath}\{file.Name}");
+                file.MoveTo($@"{tempUpdatePath}\{file.Name}");
             }
 
-            foreach (var dir in new DirectoryInfo(eldoriaPath + "\\overrides").GetDirectories())
+            foreach (var dir in new DirectoryInfo(tempUpdatePath + "\\overrides").GetDirectories())
             {
-                Directory.Move(dir.FullName, eldoriaPath + "\\" + dir.Name);
+                Directory.Move(dir.FullName, tempUpdatePath + "\\" + dir.Name);
             }
 
             label3.Text = "Borrando archivos temporales";
-            System.IO.File.Delete(eldoriaPath + "\\" + version.Files[0].FileName + ".zip");
+            Directory.Delete(eldoriaPath + "\\config", true);
+            Directory.Move(tempUpdatePath + "\\config", eldoriaPath + "\\config");
+
+            System.IO.File.Delete(tempUpdatePath + "\\" + version.Files[0].FileName + ".zip");
+
+            ModIndex oldEldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(eldoriaPath + "\\modrinth.index.json"));
+            ModIndex newEldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(tempUpdatePath + "\\modrinth.index.json"));
+
+            var newFilesList = new List<MrPack.File>(newEldoriaIndex.files);
+
+            //Find and delete old files
+            bool found = false;
+
+            int count = 0;
+            string oldMods = "";
+            foreach (var file in oldEldoriaIndex.files)
+            {
+                found = false;
+                foreach (var nFile in newFilesList)
+                {
+
+                    if (file.path == nFile.path)
+                    {
+                        found = true;
+                        //Detect new files by filtering old 
+                        if (found && System.IO.File.Exists(eldoriaPath + "\\" + file.path))
+                        {
+                            newFilesList.Remove(nFile);
+                        }
+                        break;
+                    }
+                }
+
+                if(!found && System.IO.File.Exists(eldoriaPath + "\\" + file.path))
+                {
+                    count++;
+                    oldMods += file.path + "\n";
+                    System.IO.File.Delete(eldoriaPath + "\\" + file.path);
+                    
+                }
+            }
+            MessageBox.Show(count.ToString() + " Mods Borrados");
+            MessageBox.Show(oldMods);
+
+            
+
+            System.IO.File.Delete(eldoriaPath + "\\modrinth.index.json");
+            System.IO.File.Move(tempUpdatePath + "\\modrinth.index.json", eldoriaPath + "\\modrinth.index.json");
+
+            Directory.Delete(tempUpdatePath, true);
 
             label3.Text = "Todo Hecho!";
 
             //Enable install UI
+            label4.Visible = false;
             checkedListBox1.Visible = true;
             progressBar2.Visible = true;
             currentDownload.Visible = true;
@@ -110,25 +162,26 @@ namespace EldoriaLauncher
             //Deserialize json file
             eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(eldoriaPath + "\\modrinth.index.json"));
 
+
             //Update mc version and fabric version properties
             Properties.Settings.Default["MinecraftVer"] = eldoriaIndex.dependencies.minecraft;
             Properties.Settings.Default["FabricVer"] = eldoriaIndex.dependencies.fabric_loader;
             Properties.Settings.Default["ModpackVer"] = eldoriaIndex.versionId;
             Properties.Settings.Default.Save();
-            
+
             //Filter the path names to just file names
-            for (int i = 0; i < eldoriaIndex.files.Length; i++)
+            for (int i = 0; i < newFilesList.Count; i++)
             {
-                eldoriaIndex.files[i].path = eldoriaIndex.files[i].path.Split("/")[1];
+                newFilesList[i].path = newFilesList[i].path.Split("/")[1];
             }
 
 
             //Add all mods to the list
-            for (int i = 0; i < eldoriaIndex.files.Length; i++)
+            for (int i = 0; i < newFilesList.Count; i++)
             {
 
-                installModList.Add(eldoriaIndex.files[i].path, new Tuple<string, string>(eldoriaIndex.files[i].path, eldoriaIndex.files[i].downloads[0]));
-                checkedListBox1.Items.Add(eldoriaIndex.files[i].path, true);
+                installModList.Add(newFilesList[i].path, new Tuple<string, string>(newFilesList[i].path, newFilesList[i].downloads[0]));
+                checkedListBox1.Items.Add(newFilesList[i].path, true);
 
             }
 
@@ -239,6 +292,10 @@ namespace EldoriaLauncher
 
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

@@ -94,5 +94,17 @@ namespace EldoriaLauncher.Properties {
                 this["FabricVer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ModpackVer {
+            get {
+                return ((string)(this["ModpackVer"]));
+            }
+            set {
+                this["ModpackVer"] = value;
+            }
+        }
     }
 }

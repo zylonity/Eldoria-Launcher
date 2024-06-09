@@ -35,6 +35,7 @@
             pictureBox4 = new PictureBox();
             pictureBox5 = new PictureBox();
             RunBar = new ProgressBar();
+            ver = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -123,11 +124,21 @@
             RunBar.TabIndex = 18;
             RunBar.Visible = false;
             // 
+            // ver
+            // 
+            ver.AutoSize = true;
+            ver.BackColor = Color.Transparent;
+            ver.Location = new Point(751, 466);
+            ver.Name = "ver";
+            ver.Size = new Size(0, 15);
+            ver.TabIndex = 19;
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.background;
             ClientSize = new Size(816, 489);
+            Controls.Add(ver);
             Controls.Add(RunBar);
             Controls.Add(pictureBox5);
             Controls.Add(pictureBox4);
@@ -148,6 +159,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -157,6 +169,7 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox5;
         private ProgressBar RunBar;
+        private Label ver;
     }
 }
 

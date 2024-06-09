@@ -26,10 +26,11 @@ namespace EldoriaLauncher
         string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
         
+        
         bool updating = false;
         public void PlayActive()
         {
-
+            ver.Text = (string)Properties.Settings.Default["ModpackVer"];
             //Is Username Valid
             bool usernameValid = false;
             offlineUsername = (string)Properties.Settings.Default["Username"];

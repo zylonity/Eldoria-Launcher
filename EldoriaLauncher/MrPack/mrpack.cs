@@ -14,5 +14,6 @@ namespace EldoriaLauncher.MrPack
     {
         public Dependencies dependencies { get; set; }
         public File[] files { get; set; }
+        public string versionId { get; set; }
     }
 }
