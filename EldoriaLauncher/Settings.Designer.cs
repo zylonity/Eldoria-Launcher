@@ -31,6 +31,7 @@
             RamBox = new ComboBox();
             OfflineUsernameBox = new TextBox();
             pictureBox1 = new PictureBox();
+            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -43,13 +44,13 @@
             RamBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             RamBox.ForeColor = Color.White;
             RamBox.FormattingEnabled = true;
-            RamBox.Items.AddRange(new object[] { "2048 Mb", "3072 Mb", "4096 Mb", "5120 Mb", "6144 Mb", "7168 Mb", "8192 Mb", "9216 Mb", "10240 Mb", "11264 Mb", "12288 Mb", "13312 Mb", "14336 Mb", "15360 Mb", "16384 Mb", "17408 Mb", "18432 Mb", "19456 Mb", "20480 Mb" });
+            RamBox.Items.AddRange(new object[] { "4096", "5120", "6144", "7168", "8192", "9216", "10240", "11264", "12288", "13312", "14336", "15360", "16384", "17408", "18432", "19456", "20480" });
             RamBox.Location = new Point(262, 210);
             RamBox.Margin = new Padding(4, 3, 4, 3);
             RamBox.Name = "RamBox";
             RamBox.Size = new Size(289, 28);
             RamBox.TabIndex = 2;
-            RamBox.Text = "2048 Mb";
+            RamBox.Text = "4096";
             RamBox.SelectedIndexChanged += RamBox_SelectedIndexChanged;
             // 
             // OfflineUsernameBox
@@ -80,11 +81,24 @@
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.BackColor = Color.Transparent;
+            checkBox1.Location = new Point(706, 448);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(69, 19);
+            checkBox1.TabIndex = 6;
+            checkBox1.Text = "Consola";
+            checkBox1.UseVisualStyleBackColor = false;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
             // Settings
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.menu_gui;
             ClientSize = new Size(816, 489);
+            Controls.Add(checkBox1);
             Controls.Add(pictureBox1);
             Controls.Add(OfflineUsernameBox);
             Controls.Add(RamBox);
@@ -105,5 +119,6 @@
         private System.Windows.Forms.ComboBox RamBox;
         private System.Windows.Forms.TextBox OfflineUsernameBox;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private CheckBox checkBox1;
     }
 }

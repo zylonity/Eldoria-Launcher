@@ -14,7 +14,9 @@ using CmlLib.Core.Downloader;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
 using EldoriaLauncher.Properties;
-
+using EldoriaLauncher.MrPack;
+using System.Text.Json;
+using Modrinth.Models;
 
 namespace EldoriaLauncher
 {
@@ -22,11 +24,11 @@ namespace EldoriaLauncher
     {
         string offlineUsername = (string)Properties.Settings.Default["Username"];
         int ram = (int)Properties.Settings.Default["Ram"];
-        string mcVer = "fabric-loader-0.15.10-1.20.1";
+        string mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
         string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
-        
-        
+
+
         bool updating = false;
         public void PlayActive()
         {
@@ -62,16 +64,14 @@ namespace EldoriaLauncher
         public Form1()
         {
             InitializeComponent();
+            checkFabricVer();
             pictureBox1_EnabledChanged();
             PlayActive();
         }
 
         private void Downloader_FileChanged(DownloadFileChangedEventArgs e)
         {
-            Console.WriteLine("FileKind: " + e.FileKind.ToString());
-            Console.WriteLine("FileName: " + e.FileName);
-            Console.WriteLine("TotalFileCount: " + e.TotalFileCount);
-            Console.WriteLine("ProgressedFiles: " + e.ProgressedFileCount);
+            textBox1.Text = e.FileName;
         }
 
         private void Downloader_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
@@ -80,13 +80,24 @@ namespace EldoriaLauncher
             RunBar.Value = e.ProgressPercentage;
         }
 
+        void checkFabricVer()
+        {
+            var eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(mcPathStr + "\\modrinth.index.json"));
+
+
+            //Update mc version and fabric version properties
+            Properties.Settings.Default["MinecraftVer"] = eldoriaIndex.dependencies.minecraft;
+            Properties.Settings.Default["FabricVer"] = eldoriaIndex.dependencies.fabric_loader;
+            Properties.Settings.Default["ModpackVer"] = eldoriaIndex.versionId;
+            Properties.Settings.Default.Save();
+        }
+
         //Pressing play in offline mode
-
-        
-
         private async void pictureBox1_Click(object sender, EventArgs e)
         {
+            pictureBox1.Image = Properties.Resources.jugar_disabled;
             pictureBox1.Enabled = false;
+
             RunBar.Visible = true;
             Cursor.Current = Cursors.WaitCursor;
 
@@ -107,6 +118,8 @@ namespace EldoriaLauncher
             //get version
             mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
 
+
+            
             //install
             var fabric = fabricVersions.GetVersionMetadata(mcVer);
             await fabric.SaveAsync(path);
@@ -121,25 +134,25 @@ namespace EldoriaLauncher
                 Session = MSession.GetOfflineSession(offlineUsername),
             });
 
-            //process.StartInfo.RedirectStandardError = true;
-            //process.StartInfo.RedirectStandardOutput = true;
-            //process.EnableRaisingEvents = true;
-            //process.ErrorDataReceived += (s, e) => Logging(e.Data, true);
-            //process.OutputDataReceived += (s, e) => Logging(e.Data, false);
+            if((bool)Properties.Settings.Default["Console"] == true)
+            {
+                Logging logger = new Logging();
+                logger.Activate();
+                logger.Show();
+                this.Hide();
+                await logger.StartMinecraft(process);
+            }
+            else
+            {
+                process.Start();
+            }
 
-            //process.Start();
-            //process.BeginErrorReadLine();
-            //process.BeginOutputReadLine();
-
-            Logging logger = new Logging();
-            logger.Activate();
-            logger.Show();
-            this.Hide();
-            await logger.StartMinecraft(process);
+            
 
             await process.WaitForExitAsync();
             this.Show();
             pictureBox1.Enabled = true;
+            pictureBox1.Image = Properties.Resources.jugar1;
             RunBar.Visible = false;
         }
 
@@ -224,10 +237,6 @@ namespace EldoriaLauncher
         private void pictureBox4_MouseDown(object sender, MouseEventArgs e)
         {
             pictureBox4.Image = Properties.Resources.menu3;
-
-
-
-
         }
 
         private void pictureBox4_MouseUp(object sender, MouseEventArgs e)
@@ -235,22 +244,47 @@ namespace EldoriaLauncher
             pictureBox4.Image = Properties.Resources.menu2;
         }
 
-        private void pictureBox5_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        }
-
         private void pictureBox4_Click(object sender, EventArgs e)
         {
             Settings settings = new Settings();
+            settings.Location = this.Location;
             settings.Activate();
             settings.Show();
-            settings.Location = this.Location;
             this.Hide();
             settings.Update();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void pictureBox5_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.menu2;
+        }
+
+        private void pictureBox5_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.menu1;
+        }
+
+        private void pictureBox5_MouseDown(object sender, MouseEventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.menu3;
+        }
+
+        private void pictureBox5_MouseUp(object sender, MouseEventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.menu2;
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            Mods mods = new Mods();
+            mods.Location = this.Location;
+            mods.Activate();
+            mods.Show();
+            this.Hide();
+            mods.Update();
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
         }

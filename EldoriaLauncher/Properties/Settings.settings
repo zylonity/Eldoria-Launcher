@@ -9,19 +9,22 @@
       <Value Profile="(Default)">Username</Value>
     </Setting>
     <Setting Name="Ram" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">2048</Value>
+      <Value Profile="(Default)">4096</Value>
     </Setting>
-    <Setting Name="RamIndex" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="ModpackVer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="MinecraftVer" Type="System.String" Scope="User">
       <Value Profile="(Default)">1.20.1</Value>
     </Setting>
     <Setting Name="FabricVer" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0.15.10</Value>
-    </Setting>
-    <Setting Name="ModpackVer" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RamIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Console" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

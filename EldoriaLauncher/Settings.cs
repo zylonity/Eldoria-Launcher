@@ -16,14 +16,16 @@ namespace EldoriaLauncher
         public Settings()
         {
             InitializeComponent();
-            RamBox.SelectedIndex = (int)Properties.Settings.Default["RamIndex"];
             OfflineUsernameBox.Text = (string)Properties.Settings.Default["Username"];
+            RamBox.SelectedIndex = (int)Properties.Settings.Default["RamIndex"];
         }
 
         private void RamBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int fid;
+            bool parseOK = Int32.TryParse(RamBox.Items[RamBox.SelectedIndex].ToString(), out fid);
+            Properties.Settings.Default["Ram"] = fid;
             Properties.Settings.Default["RamIndex"] = RamBox.SelectedIndex;
-            Properties.Settings.Default["Ram"] = (RamBox.SelectedIndex + 2) * 1024;
             Properties.Settings.Default.Save();
         }
 
@@ -42,7 +44,7 @@ namespace EldoriaLauncher
             mainForm.Location = this.Location;
             mainForm.Show();
             mainForm.PlayActive();
-            
+
         }
 
         //Move window
@@ -61,6 +63,11 @@ namespace EldoriaLauncher
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Console"] = checkBox1.Checked;
         }
     }
 }

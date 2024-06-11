@@ -33,9 +33,10 @@
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
             pictureBox4 = new PictureBox();
-            pictureBox5 = new PictureBox();
             RunBar = new ProgressBar();
             ver = new Label();
+            pictureBox5 = new PictureBox();
+            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -48,7 +49,7 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Enabled = false;
             pictureBox1.Image = Properties.Resources.jugar1;
-            pictureBox1.Location = new Point(315, 365);
+            pictureBox1.Location = new Point(317, 352);
             pictureBox1.Margin = new Padding(4, 3, 4, 3);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(178, 68);
@@ -93,7 +94,7 @@
             // 
             pictureBox4.BackColor = Color.Transparent;
             pictureBox4.Image = Properties.Resources.menu1;
-            pictureBox4.Location = new Point(618, 355);
+            pictureBox4.Location = new Point(617, 291);
             pictureBox4.Margin = new Padding(4, 3, 4, 3);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(67, 67);
@@ -105,20 +106,9 @@
             pictureBox4.MouseLeave += pictureBox4_MouseLeave;
             pictureBox4.MouseUp += pictureBox4_MouseUp;
             // 
-            // pictureBox5
-            // 
-            pictureBox5.BackColor = Color.Transparent;
-            pictureBox5.Location = new Point(251, 105);
-            pictureBox5.Margin = new Padding(4, 3, 4, 3);
-            pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(20, 18);
-            pictureBox5.TabIndex = 17;
-            pictureBox5.TabStop = false;
-            pictureBox5.Click += pictureBox5_Click;
-            // 
             // RunBar
             // 
-            RunBar.Location = new Point(312, 448);
+            RunBar.Location = new Point(312, 431);
             RunBar.Name = "RunBar";
             RunBar.Size = new Size(183, 21);
             RunBar.TabIndex = 18;
@@ -133,14 +123,40 @@
             ver.Size = new Size(0, 15);
             ver.TabIndex = 19;
             // 
+            // pictureBox5
+            // 
+            pictureBox5.BackColor = Color.Transparent;
+            pictureBox5.Image = Properties.Resources.menu1;
+            pictureBox5.Location = new Point(617, 385);
+            pictureBox5.Margin = new Padding(4, 3, 4, 3);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(67, 67);
+            pictureBox5.TabIndex = 20;
+            pictureBox5.TabStop = false;
+            pictureBox5.Click += pictureBox5_Click;
+            pictureBox5.MouseDown += pictureBox5_MouseDown;
+            pictureBox5.MouseEnter += pictureBox5_MouseEnter;
+            pictureBox5.MouseLeave += pictureBox5_MouseLeave;
+            pictureBox5.MouseUp += pictureBox5_MouseUp;
+            // 
+            // textBox1
+            // 
+            textBox1.Enabled = false;
+            textBox1.Location = new Point(12, 458);
+            textBox1.Name = "textBox1";
+            textBox1.ReadOnly = true;
+            textBox1.Size = new Size(792, 23);
+            textBox1.TabIndex = 22;
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.background;
             ClientSize = new Size(816, 489);
+            Controls.Add(textBox1);
+            Controls.Add(pictureBox5);
             Controls.Add(ver);
             Controls.Add(RunBar);
-            Controls.Add(pictureBox5);
             Controls.Add(pictureBox4);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
@@ -167,9 +183,10 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox5;
         private ProgressBar RunBar;
         private Label ver;
+        private PictureBox pictureBox5;
+        private TextBox textBox1;
     }
 }
 

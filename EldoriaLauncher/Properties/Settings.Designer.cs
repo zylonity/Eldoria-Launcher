@@ -49,7 +49,7 @@ namespace EldoriaLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2048")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4096")]
         public int Ram {
             get {
                 return ((int)(this["Ram"]));
@@ -61,13 +61,13 @@ namespace EldoriaLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int RamIndex {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ModpackVer {
             get {
-                return ((int)(this["RamIndex"]));
+                return ((string)(this["ModpackVer"]));
             }
             set {
-                this["RamIndex"] = value;
+                this["ModpackVer"] = value;
             }
         }
         
@@ -85,7 +85,7 @@ namespace EldoriaLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.15.10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string FabricVer {
             get {
                 return ((string)(this["FabricVer"]));
@@ -97,13 +97,25 @@ namespace EldoriaLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ModpackVer {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int RamIndex {
             get {
-                return ((string)(this["ModpackVer"]));
+                return ((int)(this["RamIndex"]));
             }
             set {
-                this["ModpackVer"] = value;
+                this["RamIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Console {
+            get {
+                return ((bool)(this["Console"]));
+            }
+            set {
+                this["Console"] = value;
             }
         }
     }
