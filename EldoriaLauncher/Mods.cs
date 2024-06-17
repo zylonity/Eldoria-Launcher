@@ -204,14 +204,6 @@ namespace EldoriaLauncher
 
         private void InitializeObjectListView()
         {
-            // Create some sample data
-            var items = new List<ListItem>
-        {
-            new ListItem { Category = "CATEGORÍA 1", ItemName = "Item 1", Checked = false },
-            new ListItem { Category = "CATEGORÍA 1", ItemName = "Item 2", Checked = false },
-            new ListItem { Category = "CATEGORÍA 2", ItemName = "Item 3", Checked = false },
-            new ListItem { Category = "CATEGORÍA 2", ItemName = "Item 4", Checked = false }
-        };
 
             // Clear existing columns and groups
             objectListView1.Clear();
@@ -219,11 +211,12 @@ namespace EldoriaLauncher
 
             // Create columns
             OLVColumn itemColumn = new OLVColumn("Item", "ItemName");
-            itemColumn.Width = 200; // Adjust width if necessary
+            itemColumn.Width = 185; // Adjust width if necessary
             itemColumn.IsVisible = false; // Make the column header invisible
             objectListView1.Columns.Add(itemColumn);
 
             // Set the data source
+            var items = LoadItemsFromFile(modsPath + "\\" + "optionals.txt");
             objectListView1.SetObjects(items);
 
             // CheckBox handling
@@ -248,6 +241,36 @@ namespace EldoriaLauncher
             objectListView1.HeaderStyle = ColumnHeaderStyle.None;
 
             objectListView1.BuildList();
+        }
+
+        private List<ListItem> LoadItemsFromFile(string filePath)
+        {
+            var items = new List<ListItem>();
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var lines = System.IO.File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    var parts = line.Split(',');
+                    if (parts.Length == 2)
+                    {
+                        var item = new ListItem
+                        {
+                            Category = parts[0].Trim(),
+                            ItemName = parts[1].Trim(),
+                            Checked = false
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show($"File not found: {filePath}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return items;
         }
 
     }
