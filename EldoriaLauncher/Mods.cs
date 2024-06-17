@@ -8,9 +8,15 @@ using System.IO.Compression;
 using EldoriaLauncher.MrPack;
 using System.Text.Json;
 using System.Xml.Linq;
+using BrightIdeasSoftware;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace EldoriaLauncher
 {
+    
+
     public partial class Mods : Form
     {
 
@@ -33,76 +39,68 @@ namespace EldoriaLauncher
         public Mods()
         {
             InitializeComponent();
-            GetMods();
+            InitializeObjectListView();
+            //GetMods();
         }
 
         async Task GetMods()
         {
 
-            listView1.CheckBoxes = true;
+            //listView1.CheckBoxes = true;
             button1.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
 
-            userAgent = new UserAgent
-            {
-                ProjectName = "Eldoria-Launcher",
-                ProjectVersion = "1.2.0",
-                GitHubUsername = "zylonity",
-            };
+            //userAgent = new UserAgent
+            //{
+            //    ProjectName = "Eldoria-Launcher",
+            //    ProjectVersion = "1.2.0",
+            //    GitHubUsername = "zylonity",
+            //};
 
-            options = new ModrinthClientConfig
-            {
-                UserAgent = userAgent.ToString()
-            };
+            //options = new ModrinthClientConfig
+            //{
+            //    UserAgent = userAgent.ToString()
+            //};
 
-            client = new ModrinthClient(options);
+            //client = new ModrinthClient(options);
 
-            string[] files = Directory.GetFiles(modsPath);
-            var fileNames = new List<string>();
-            foreach (string file in files)
-            {
-                fileNames.Add(Path.GetFileName(file));
-            }
+            //string[] files = Directory.GetFiles(modsPath);
+            //var fileNames = new List<string>();
+            //foreach (string file in files)
+            //{
+            //    fileNames.Add(Path.GetFileName(file));
+            //}
 
-            var modNames = new List<string>();
+            //var modNames = new List<string>();
 
-            foreach (string name in fileNames)
-            {
-                var search = await client.Project.SearchAsync(name);
-                if (search.Hits.Count() > 0)
-                {
-                    modNames.Add(search.Hits[0].Title);
-                    ListViewItem item1WithToolTip = new ListViewItem(search.Hits[0].Title);
-                    item1WithToolTip.ToolTipText = search.Hits[0].Description;
-                    listView1.Items.Add(item1WithToolTip);
+            //foreach (string name in fileNames)
+            //{
+            //    var search = await client.Project.SearchAsync(name);
+            //    if (search.Hits.Count() > 0)
+            //    {
+            //        modNames.Add(search.Hits[0].Title);
+            //        ListViewItem item1WithToolTip = new ListViewItem(search.Hits[0].Title);
+            //        item1WithToolTip.ToolTipText = search.Hits[0].Description;
+            //        listView1.Items.Add(item1WithToolTip);
 
-                }
-                else
-                {
-                    modNames.Add(name);
-                    listView1.Items.Add(name);
-                }
+            //    }
+            //    else
+            //    {
+            //        modNames.Add(name);
+            //        listView1.Items.Add(name);
+            //    }
 
-            }
+            //}
 
 
 
 
             //Enable install UI
-            checkedListBox1.Visible = true;
+            //checkedListBox1.Visible = true;
             progressBar2.Visible = true;
             currentDownload.Visible = true;
             button1.Visible = true;
             checkBox1.Visible = true;
-            label1.Visible = true;
-            label2.Visible = true;
-
-            //Add all mods to the list
-            for (int i = 0; i < modNames.Count; i++)
-            {
-
-
-            }
 
             button1.Enabled = true;
             Cursor.Current = Cursors.Default;
@@ -110,65 +108,65 @@ namespace EldoriaLauncher
 
         async Task InstallMods()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            System.IO.Directory.CreateDirectory(modsPath);
+            //Cursor.Current = Cursors.WaitCursor;
+            //System.IO.Directory.CreateDirectory(modsPath);
 
-            float itemsToDownload = checkedListBox1.CheckedItems.Count - 1;
-            float itemsDownloaded = 0;
+            //float itemsToDownload = checkedListBox1.CheckedItems.Count - 1;
+            //float itemsDownloaded = 0;
 
-            downloadAsync = checkBox1.Checked;
+            //downloadAsync = checkBox1.Checked;
 
-            //Download all the mods
-            for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
-            {
+            ////Download all the mods
+            //for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
+            //{
 
-                string filename = installModList[checkedListBox1.CheckedItems[i].ToString()].Item1;
-                string downloadUrl = installModList[checkedListBox1.CheckedItems[i].ToString()].Item2;
-
-
-                int x = i;
-                if (i + 1 < checkedListBox1.CheckedItems.Count)
-                    x = i + 1;
-
-                string nextFileName = checkedListBox1.CheckedItems[x].ToString();
-
-                WebClient webClient = new WebClient();
-                webClient.DownloadProgressChanged += (s, e) =>
-                {
-                    progressBar2.Value = e.ProgressPercentage;
-                    progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
-                };
-                webClient.DownloadFileCompleted += (s, e) =>
-                {
-                    itemsDownloaded++;
-                    currentDownload.Text = nextFileName;
-
-                    if (downloadAsync && (int)itemsDownloaded == (itemsToDownload + 1))
-                    {
-                        Application.Restart();
-                    }
-                };
+            //    string filename = installModList[checkedListBox1.CheckedItems[i].ToString()].Item1;
+            //    string downloadUrl = installModList[checkedListBox1.CheckedItems[i].ToString()].Item2;
 
 
-                if (downloadAsync)
-                {
-                    webClient.DownloadFileAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
-                }
-                else
-                {
-                    await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
-                }
+            //    int x = i;
+            //    if (i + 1 < checkedListBox1.CheckedItems.Count)
+            //        x = i + 1;
+
+            //    string nextFileName = checkedListBox1.CheckedItems[x].ToString();
+
+            //    WebClient webClient = new WebClient();
+            //    webClient.DownloadProgressChanged += (s, e) =>
+            //    {
+            //        progressBar2.Value = e.ProgressPercentage;
+            //        progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
+            //    };
+            //    webClient.DownloadFileCompleted += (s, e) =>
+            //    {
+            //        itemsDownloaded++;
+            //        currentDownload.Text = nextFileName;
+
+            //        if (downloadAsync && (int)itemsDownloaded == (itemsToDownload + 1))
+            //        {
+            //            Application.Restart();
+            //        }
+            //    };
 
 
+            //    if (downloadAsync)
+            //    {
+            //        webClient.DownloadFileAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+            //    }
+            //    else
+            //    {
+            //        await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+            //    }
 
 
 
-            }
 
-            if (!downloadAsync)
-            {
-                Application.Restart();
-            }
+
+            //}
+
+            //if (!downloadAsync)
+            //{
+            //    Application.Restart();
+            //}
 
         }
 
@@ -190,30 +188,10 @@ namespace EldoriaLauncher
             }
         }
 
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             InstallMods();
             button1.Enabled = false;
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -223,6 +201,62 @@ namespace EldoriaLauncher
             mainForm.Show();
             mainForm.PlayActive();
         }
+
+        private void InitializeObjectListView()
+        {
+            // Create some sample data
+            var items = new List<ListItem>
+        {
+            new ListItem { Category = "CATEGORÍA 1", ItemName = "Item 1", Checked = false },
+            new ListItem { Category = "CATEGORÍA 1", ItemName = "Item 2", Checked = false },
+            new ListItem { Category = "CATEGORÍA 2", ItemName = "Item 3", Checked = false },
+            new ListItem { Category = "CATEGORÍA 2", ItemName = "Item 4", Checked = false }
+        };
+
+            // Clear existing columns and groups
+            objectListView1.Clear();
+            objectListView1.Groups.Clear();
+
+            // Create columns
+            OLVColumn itemColumn = new OLVColumn("Item", "ItemName");
+            itemColumn.Width = 200; // Adjust width if necessary
+            itemColumn.IsVisible = false; // Make the column header invisible
+            objectListView1.Columns.Add(itemColumn);
+
+            // Set the data source
+            objectListView1.SetObjects(items);
+
+            // CheckBox handling
+            objectListView1.CellEditActivation = ObjectListView.CellEditActivateMode.SingleClick;
+            objectListView1.CheckStateGetter = delegate (object rowObject)
+            {
+                return ((ListItem)rowObject).Checked ? CheckState.Checked : CheckState.Unchecked;
+            };
+            objectListView1.CheckStatePutter = delegate (object rowObject, CheckState value)
+            {
+                ((ListItem)rowObject).Checked = (value == CheckState.Checked);
+                return value;
+            };
+
+            // Group by category
+            itemColumn.GroupKeyGetter = delegate (object rowObject)
+            {
+                return ((ListItem)rowObject).Category;
+            };
+
+            // Hide the column headers
+            objectListView1.HeaderStyle = ColumnHeaderStyle.None;
+
+            objectListView1.BuildList();
+        }
+
+    }
+
+    public class ListItem
+    {
+        public string Category { get; set; }
+        public string ItemName { get; set; }
+        public bool Checked { get; set; }
     }
 
 }

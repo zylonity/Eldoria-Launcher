@@ -49,10 +49,10 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Enabled = false;
             pictureBox1.Image = Properties.Resources.jugar1;
-            pictureBox1.Location = new Point(317, 352);
+            pictureBox1.Location = new Point(79, 172);
             pictureBox1.Margin = new Padding(4, 3, 4, 3);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(178, 68);
+            pictureBox1.Size = new Size(275, 75);
             pictureBox1.TabIndex = 13;
             pictureBox1.TabStop = false;
             pictureBox1.EnabledChanged += pictureBox1_EnabledChanged;
@@ -67,7 +67,7 @@
             pictureBox2.BackColor = Color.Transparent;
             pictureBox2.Cursor = Cursors.Hand;
             pictureBox2.Image = Properties.Resources.cerrar;
-            pictureBox2.Location = new Point(768, 15);
+            pictureBox2.Location = new Point(397, 12);
             pictureBox2.Margin = new Padding(4, 3, 4, 3);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(23, 23);
@@ -77,11 +77,10 @@
             // 
             // pictureBox3
             // 
-            pictureBox3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox3.BackColor = Color.Transparent;
             pictureBox3.Cursor = Cursors.Hand;
             pictureBox3.Image = Properties.Resources.minimizar;
-            pictureBox3.Location = new Point(721, 21);
+            pictureBox3.Location = new Point(364, 17);
             pictureBox3.Margin = new Padding(4, 3, 4, 3);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(25, 11);
@@ -94,10 +93,10 @@
             // 
             pictureBox4.BackColor = Color.Transparent;
             pictureBox4.Image = Properties.Resources.menu1;
-            pictureBox4.Location = new Point(617, 291);
+            pictureBox4.Location = new Point(226, 263);
             pictureBox4.Margin = new Padding(4, 3, 4, 3);
             pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(67, 67);
+            pictureBox4.Size = new Size(176, 67);
             pictureBox4.TabIndex = 16;
             pictureBox4.TabStop = false;
             pictureBox4.Click += pictureBox4_Click;
@@ -108,7 +107,7 @@
             // 
             // RunBar
             // 
-            RunBar.Location = new Point(312, 431);
+            RunBar.Location = new Point(121, 381);
             RunBar.Name = "RunBar";
             RunBar.Size = new Size(183, 21);
             RunBar.TabIndex = 18;
@@ -127,10 +126,10 @@
             // 
             pictureBox5.BackColor = Color.Transparent;
             pictureBox5.Image = Properties.Resources.menu1;
-            pictureBox5.Location = new Point(617, 385);
+            pictureBox5.Location = new Point(31, 263);
             pictureBox5.Margin = new Padding(4, 3, 4, 3);
             pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(67, 67);
+            pictureBox5.Size = new Size(176, 67);
             pictureBox5.TabIndex = 20;
             pictureBox5.TabStop = false;
             pictureBox5.Click += pictureBox5_Click;
@@ -145,14 +144,14 @@
             textBox1.Location = new Point(12, 458);
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
-            textBox1.Size = new Size(792, 23);
+            textBox1.Size = new Size(409, 23);
             textBox1.TabIndex = 22;
             // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.background;
-            ClientSize = new Size(816, 489);
+            ClientSize = new Size(433, 489);
             Controls.Add(textBox1);
             Controls.Add(pictureBox5);
             Controls.Add(ver);

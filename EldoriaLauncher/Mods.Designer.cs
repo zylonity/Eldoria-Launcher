@@ -28,38 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            checkedListBox1 = new CheckedListBox();
             button1 = new Button();
             currentDownload = new Label();
             progressBar1 = new ProgressBar();
             progressBar2 = new ProgressBar();
             checkBox1 = new CheckBox();
-            label1 = new Label();
-            label2 = new Label();
             label3 = new Label();
-            listView1 = new ListView();
-            modsList = new ColumnHeader();
-            columnHeader1 = new ColumnHeader();
             pictureBox1 = new PictureBox();
+            objectListView1 = new BrightIdeasSoftware.ObjectListView();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)objectListView1).BeginInit();
             SuspendLayout();
-            // 
-            // checkedListBox1
-            // 
-            checkedListBox1.Anchor = AnchorStyles.Top;
-            checkedListBox1.BackColor = Color.FromArgb(200, 200, 200);
-            checkedListBox1.CheckOnClick = true;
-            checkedListBox1.FormattingEnabled = true;
-            checkedListBox1.Location = new Point(531, 37);
-            checkedListBox1.Name = "checkedListBox1";
-            checkedListBox1.Size = new Size(200, 292);
-            checkedListBox1.TabIndex = 6;
-            checkedListBox1.Visible = false;
-            checkedListBox1.SelectedIndexChanged += checkedListBox1_SelectedIndexChanged;
             // 
             // button1
             // 
-            button1.Location = new Point(607, 384);
+            button1.Location = new Point(277, 435);
             button1.Name = "button1";
             button1.Size = new Size(124, 42);
             button1.TabIndex = 7;
@@ -81,9 +64,9 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(96, 391);
+            progressBar1.Location = new Point(43, 381);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(451, 26);
+            progressBar1.Size = new Size(215, 26);
             progressBar1.TabIndex = 9;
             // 
             // progressBar2
@@ -98,69 +81,23 @@
             // 
             checkBox1.AutoSize = true;
             checkBox1.BackColor = Color.Transparent;
-            checkBox1.Location = new Point(607, 431);
+            checkBox1.Location = new Point(285, 388);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(136, 19);
             checkBox1.TabIndex = 11;
             checkBox1.Text = "Descargar con Async";
             checkBox1.UseVisualStyleBackColor = false;
             checkBox1.Visible = false;
-            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Location = new Point(611, 468);
-            label1.Name = "label1";
-            label1.Size = new Size(132, 15);
-            label1.TabIndex = 12;
-            label1.Text = "decente y buen internet";
-            label1.Visible = false;
-            label1.Click += label1_Click;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.BackColor = Color.Transparent;
-            label2.Location = new Point(595, 453);
-            label2.Name = "label2";
-            label2.Size = new Size(164, 15);
-            label2.TabIndex = 13;
-            label2.Text = "Recomendado si tienes un PC";
-            label2.Visible = false;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.BackColor = Color.Transparent;
-            label3.Location = new Point(96, 365);
+            label3.Location = new Point(43, 354);
             label3.Name = "label3";
             label3.Size = new Size(38, 15);
             label3.TabIndex = 16;
             label3.Text = "label3";
-            label3.Click += label3_Click;
-            // 
-            // listView1
-            // 
-            listView1.Columns.AddRange(new ColumnHeader[] { modsList, columnHeader1 });
-            listView1.HeaderStyle = ColumnHeaderStyle.None;
-            listView1.Location = new Point(148, 36);
-            listView1.Name = "listView1";
-            listView1.ShowItemToolTips = true;
-            listView1.Size = new Size(307, 278);
-            listView1.TabIndex = 17;
-            listView1.UseCompatibleStateImageBehavior = false;
-            listView1.View = View.Details;
-            // 
-            // modsList
-            // 
-            modsList.Text = "ModsList";
-            modsList.Width = 220;
-            // 
-            // columnHeader1
-            // 
-            columnHeader1.Width = 0;
             // 
             // pictureBox1
             // 
@@ -176,49 +113,52 @@
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
             // 
+            // objectListView1
+            // 
+            objectListView1.CellEditUseWholeCell = false;
+            objectListView1.CheckBoxes = true;
+            objectListView1.Location = new Point(171, 60);
+            objectListView1.Name = "objectListView1";
+            objectListView1.Size = new Size(210, 254);
+            objectListView1.TabIndex = 19;
+            objectListView1.View = View.Details;
+            // 
             // Mods
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.blank_gui;
-            ClientSize = new Size(816, 489);
+            ClientSize = new Size(433, 489);
+            Controls.Add(objectListView1);
             Controls.Add(pictureBox1);
-            Controls.Add(listView1);
             Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
             Controls.Add(checkBox1);
             Controls.Add(progressBar2);
             Controls.Add(progressBar1);
             Controls.Add(currentDownload);
             Controls.Add(button1);
-            Controls.Add(checkedListBox1);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Mods";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.Manual;
             Text = "Settings";
             MouseDown += Settings_MouseDown;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)objectListView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private CheckedListBox checkedListBox1;
         private Button button1;
         private Label currentDownload;
         private ProgressBar progressBar1;
         private ProgressBar progressBar2;
         private CheckBox checkBox1;
-        private Label label1;
-        private Label label2;
         private Label label3;
-        private ListView listView1;
-        private ColumnHeader modsList;
-        private ColumnHeader columnHeader1;
         private PictureBox pictureBox1;
+        private BrightIdeasSoftware.ObjectListView objectListView1;
     }
 }

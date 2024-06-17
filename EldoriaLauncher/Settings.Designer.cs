@@ -45,7 +45,7 @@
             RamBox.ForeColor = Color.White;
             RamBox.FormattingEnabled = true;
             RamBox.Items.AddRange(new object[] { "4096", "5120", "6144", "7168", "8192", "9216", "10240", "11264", "12288", "13312", "14336", "15360", "16384", "17408", "18432", "19456", "20480" });
-            RamBox.Location = new Point(262, 210);
+            RamBox.Location = new Point(85, 212);
             RamBox.Margin = new Padding(4, 3, 4, 3);
             RamBox.Name = "RamBox";
             RamBox.Size = new Size(289, 28);
@@ -59,7 +59,7 @@
             OfflineUsernameBox.BorderStyle = BorderStyle.None;
             OfflineUsernameBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             OfflineUsernameBox.ForeColor = Color.White;
-            OfflineUsernameBox.Location = new Point(262, 107);
+            OfflineUsernameBox.Location = new Point(85, 110);
             OfflineUsernameBox.Margin = new Padding(4, 3, 4, 3);
             OfflineUsernameBox.Name = "OfflineUsernameBox";
             OfflineUsernameBox.Size = new Size(289, 19);
@@ -85,7 +85,7 @@
             // 
             checkBox1.AutoSize = true;
             checkBox1.BackColor = Color.Transparent;
-            checkBox1.Location = new Point(706, 448);
+            checkBox1.Location = new Point(352, 458);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(69, 19);
             checkBox1.TabIndex = 6;
@@ -97,7 +97,7 @@
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.menu_gui;
-            ClientSize = new Size(816, 489);
+            ClientSize = new Size(433, 489);
             Controls.Add(checkBox1);
             Controls.Add(pictureBox1);
             Controls.Add(OfflineUsernameBox);

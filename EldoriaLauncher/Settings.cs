@@ -18,6 +18,7 @@ namespace EldoriaLauncher
             InitializeComponent();
             OfflineUsernameBox.Text = (string)Properties.Settings.Default["Username"];
             RamBox.SelectedIndex = (int)Properties.Settings.Default["RamIndex"];
+            checkBox1.Checked = (bool)Properties.Settings.Default["Console"];
         }
 
         private void RamBox_SelectedIndexChanged(object sender, EventArgs e)
