@@ -99,6 +99,8 @@ namespace EldoriaLauncher
             pictureBox1.Enabled = false;
 
             RunBar.Visible = true;
+            textBox1.Visible = true;
+
             Cursor.Current = Cursors.WaitCursor;
 
             System.Net.ServicePointManager.DefaultConnectionLimit = 256;
@@ -153,6 +155,8 @@ namespace EldoriaLauncher
             this.Show();
             pictureBox1.Enabled = true;
             pictureBox1.Image = Properties.Resources.jugar1;
+
+            textBox1.Visible = false;
             RunBar.Visible = false;
         }
 

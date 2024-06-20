@@ -67,7 +67,7 @@
             pictureBox2.BackColor = Color.Transparent;
             pictureBox2.Cursor = Cursors.Hand;
             pictureBox2.Image = Properties.Resources.cerrar;
-            pictureBox2.Location = new Point(397, 12);
+            pictureBox2.Location = new Point(403, 11);
             pictureBox2.Margin = new Padding(4, 3, 4, 3);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(23, 23);
@@ -80,7 +80,7 @@
             pictureBox3.BackColor = Color.Transparent;
             pictureBox3.Cursor = Cursors.Hand;
             pictureBox3.Image = Properties.Resources.minimizar;
-            pictureBox3.Location = new Point(364, 17);
+            pictureBox3.Location = new Point(369, 19);
             pictureBox3.Margin = new Padding(4, 3, 4, 3);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(25, 11);
@@ -107,7 +107,7 @@
             // 
             // RunBar
             // 
-            RunBar.Location = new Point(121, 381);
+            RunBar.Location = new Point(127, 427);
             RunBar.Name = "RunBar";
             RunBar.Size = new Size(183, 21);
             RunBar.TabIndex = 18;
@@ -141,16 +141,17 @@
             // textBox1
             // 
             textBox1.Enabled = false;
-            textBox1.Location = new Point(12, 458);
+            textBox1.Location = new Point(12, 454);
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
             textBox1.Size = new Size(409, 23);
             textBox1.TabIndex = 22;
+            textBox1.Visible = false;
             // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackgroundImage = Properties.Resources.background;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(433, 489);
             Controls.Add(textBox1);
             Controls.Add(pictureBox5);

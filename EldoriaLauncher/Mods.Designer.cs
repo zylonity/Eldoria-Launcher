@@ -81,7 +81,7 @@
             // 
             checkBox1.AutoSize = true;
             checkBox1.BackColor = Color.Transparent;
-            checkBox1.Location = new Point(285, 388);
+            checkBox1.Location = new Point(277, 381);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(136, 19);
             checkBox1.TabIndex = 11;
@@ -93,7 +93,7 @@
             // 
             label3.AutoSize = true;
             label3.BackColor = Color.Transparent;
-            label3.Location = new Point(43, 354);
+            label3.Location = new Point(43, 363);
             label3.Name = "label3";
             label3.Size = new Size(38, 15);
             label3.TabIndex = 16;
@@ -115,9 +115,10 @@
             // 
             // objectListView1
             // 
+            objectListView1.BackColor = Color.White;
             objectListView1.CellEditUseWholeCell = false;
             objectListView1.CheckBoxes = true;
-            objectListView1.Location = new Point(171, 60);
+            objectListView1.Location = new Point(203, 74);
             objectListView1.Name = "objectListView1";
             objectListView1.Size = new Size(210, 254);
             objectListView1.TabIndex = 19;
@@ -127,7 +128,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackgroundImage = Properties.Resources.blank_gui;
+            BackgroundImage = Properties.Resources.Launcher_fondo_menus;
             ClientSize = new Size(433, 489);
             Controls.Add(objectListView1);
             Controls.Add(pictureBox1);

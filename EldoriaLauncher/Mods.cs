@@ -12,6 +12,7 @@ using BrightIdeasSoftware;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace EldoriaLauncher
 {
@@ -202,7 +203,7 @@ namespace EldoriaLauncher
             mainForm.PlayActive();
         }
 
-        private void InitializeObjectListView()
+        private async void InitializeObjectListView()
         {
 
             // Clear existing columns and groups
@@ -216,7 +217,7 @@ namespace EldoriaLauncher
             objectListView1.Columns.Add(itemColumn);
 
             // Set the data source
-            var items = LoadItemsFromFile(modsPath + "\\" + "optionals.txt");
+            var items = await LoadItemsFromFile(modsPath + "\\" + "optionals.txt");
             objectListView1.SetObjects(items);
 
             // CheckBox handling
@@ -240,12 +241,38 @@ namespace EldoriaLauncher
             // Hide the column headers
             objectListView1.HeaderStyle = ColumnHeaderStyle.None;
 
+            objectListView1.CellToolTipGetter = delegate (OLVColumn column, object rowObject)
+            {
+                if (rowObject is ListItem item)
+                {
+                    return ((ListItem)rowObject).toolTip;
+                }
+                return null;
+            };
+
             objectListView1.BuildList();
+
+            
         }
 
-        private List<ListItem> LoadItemsFromFile(string filePath)
+        private async Task<List<ListItem>> LoadItemsFromFile(string filePath)
         {
             var items = new List<ListItem>();
+    
+            //Connect to modrinth API
+            userAgent = new UserAgent
+            {
+                ProjectName = "Eldoria-Launcher",
+                ProjectVersion = "1.2.0",
+                GitHubUsername = "zylonity",
+            };
+
+            options = new ModrinthClientConfig
+            {
+                UserAgent = userAgent.ToString()
+            };
+
+            client = new ModrinthClient(options);
 
             if (System.IO.File.Exists(filePath))
             {
@@ -253,12 +280,16 @@ namespace EldoriaLauncher
                 foreach (var line in lines)
                 {
                     var parts = line.Split(',');
+                    //Get project from url name
+                    
                     if (parts.Length == 2)
                     {
+                        var project = await client.Project.GetAsync(parts[1].Trim());
                         var item = new ListItem
                         {
                             Category = parts[0].Trim(),
-                            ItemName = parts[1].Trim(),
+                            ItemName = project.Title,
+                            toolTip = project.Description,
                             Checked = false
                         };
                         items.Add(item);
@@ -279,6 +310,7 @@ namespace EldoriaLauncher
     {
         public string Category { get; set; }
         public string ItemName { get; set; }
+        public string toolTip { get; set; }
         public bool Checked { get; set; }
     }
 

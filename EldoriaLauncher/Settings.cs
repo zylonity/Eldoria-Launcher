@@ -71,5 +71,10 @@ namespace EldoriaLauncher
             Properties.Settings.Default["Console"] = checkBox1.Checked;
             Properties.Settings.Default.Save();
         }
+
+        private void Settings_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
