@@ -48,7 +48,6 @@
             button1.TabIndex = 7;
             button1.Text = "Actualizar Mods";
             button1.UseVisualStyleBackColor = true;
-            button1.Visible = false;
             button1.Click += button1_Click;
             // 
             // currentDownload
@@ -145,6 +144,7 @@
             Name = "Mods";
             StartPosition = FormStartPosition.Manual;
             Text = "Settings";
+            KeyDown += Mods_KeyDown;
             MouseDown += Settings_MouseDown;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)objectListView1).EndInit();

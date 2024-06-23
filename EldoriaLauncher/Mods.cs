@@ -16,7 +16,7 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace EldoriaLauncher
 {
-    
+
 
     public partial class Mods : Form
     {
@@ -25,6 +25,7 @@ namespace EldoriaLauncher
 
         string eldoriaPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
+        string configPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\config";
 
         bool downloadAsync = false;
 
@@ -40,7 +41,9 @@ namespace EldoriaLauncher
         public Mods()
         {
             InitializeComponent();
+            LoadCheckboxes();
             InitializeObjectListView();
+            this.KeyPreview = true;
             //GetMods();
         }
 
@@ -107,67 +110,120 @@ namespace EldoriaLauncher
             Cursor.Current = Cursors.Default;
         }
 
+        void LoadCheckboxes()
+        {
+
+            string docPath = eldoriaPath + "\\" + "downloadedOptionalMods.txt";
+            if (System.IO.File.Exists(docPath))
+            {
+                var lines = System.IO.File.ReadAllLines(docPath);
+                //var checkedMods = new HashSet<string>(lines.Select(line => line.Trim()));
+                
+
+                foreach (OLVListItem listViewItem in objectListView1.Items)
+                {
+                    if (listViewItem.RowObject is ListItem listItem)
+                    {
+                        if (lines.Contains(listItem.ItemName))
+                        {
+                            listItem.Checked = true;
+                        }
+                    }
+                }
+
+                //objectListView1.RefreshObjects(objectListView1.Objects.Cast<object>().ToList());
+               objectListView1.Refresh();
+            }
+        }
+
+
         async Task InstallMods()
         {
+
+            string docPath = eldoriaPath + "\\" + "downloadedOptionalMods.txt";
+
+            string test = "";
+            for (int i = 0; i < objectListView1.CheckedItems.Count; i++)
+            {
+                test += objectListView1.CheckedItems[i].Text + '\n';
+            }
+            MessageBox.Show(test);
+
+
+            if (System.IO.File.Exists(docPath))
+            {
+                using (StreamWriter engOptionalsWriter = new StreamWriter(docPath, false))
+                {
+
+                }
+            }
+            else
+            {
+                using (StreamWriter downloadedMods = new StreamWriter(docPath, false))
+                {
+                    downloadedMods.WriteLine(test);
+                }
+            }
+
             //Cursor.Current = Cursors.WaitCursor;
             //System.IO.Directory.CreateDirectory(modsPath);
 
-            //float itemsToDownload = checkedListBox1.CheckedItems.Count - 1;
-            //float itemsDownloaded = 0;
+                //float itemsToDownload = checkedListBox1.CheckedItems.Count - 1;
+                //float itemsDownloaded = 0;
 
-            //downloadAsync = checkBox1.Checked;
+                //downloadAsync = checkBox1.Checked;
 
-            ////Download all the mods
-            //for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
-            //{
+                ////Download all the mods
+                //for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
+                //{
 
-            //    string filename = installModList[checkedListBox1.CheckedItems[i].ToString()].Item1;
-            //    string downloadUrl = installModList[checkedListBox1.CheckedItems[i].ToString()].Item2;
-
-
-            //    int x = i;
-            //    if (i + 1 < checkedListBox1.CheckedItems.Count)
-            //        x = i + 1;
-
-            //    string nextFileName = checkedListBox1.CheckedItems[x].ToString();
-
-            //    WebClient webClient = new WebClient();
-            //    webClient.DownloadProgressChanged += (s, e) =>
-            //    {
-            //        progressBar2.Value = e.ProgressPercentage;
-            //        progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
-            //    };
-            //    webClient.DownloadFileCompleted += (s, e) =>
-            //    {
-            //        itemsDownloaded++;
-            //        currentDownload.Text = nextFileName;
-
-            //        if (downloadAsync && (int)itemsDownloaded == (itemsToDownload + 1))
-            //        {
-            //            Application.Restart();
-            //        }
-            //    };
+                //    string filename = installModList[checkedListBox1.CheckedItems[i].ToString()].Item1;
+                //    string downloadUrl = installModList[checkedListBox1.CheckedItems[i].ToString()].Item2;
 
 
-            //    if (downloadAsync)
-            //    {
-            //        webClient.DownloadFileAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
-            //    }
-            //    else
-            //    {
-            //        await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
-            //    }
+                //    int x = i;
+                //    if (i + 1 < checkedListBox1.CheckedItems.Count)
+                //        x = i + 1;
+
+                //    string nextFileName = checkedListBox1.CheckedItems[x].ToString();
+
+                //    WebClient webClient = new WebClient();
+                //    webClient.DownloadProgressChanged += (s, e) =>
+                //    {
+                //        progressBar2.Value = e.ProgressPercentage;
+                //        progressBar1.Value = (int)((itemsDownloaded / itemsToDownload) * 100);
+                //    };
+                //    webClient.DownloadFileCompleted += (s, e) =>
+                //    {
+                //        itemsDownloaded++;
+                //        currentDownload.Text = nextFileName;
+
+                //        if (downloadAsync && (int)itemsDownloaded == (itemsToDownload + 1))
+                //        {
+                //            Application.Restart();
+                //        }
+                //    };
 
 
+                //    if (downloadAsync)
+                //    {
+                //        webClient.DownloadFileAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+                //    }
+                //    else
+                //    {
+                //        await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+                //    }
 
 
 
-            //}
 
-            //if (!downloadAsync)
-            //{
-            //    Application.Restart();
-            //}
+
+                //}
+
+                //if (!downloadAsync)
+                //{
+                //    Application.Restart();
+                //}
 
         }
 
@@ -192,7 +248,7 @@ namespace EldoriaLauncher
         private void button1_Click(object sender, EventArgs e)
         {
             InstallMods();
-            button1.Enabled = false;
+            //button1.Enabled = false;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -217,7 +273,7 @@ namespace EldoriaLauncher
             objectListView1.Columns.Add(itemColumn);
 
             // Set the data source
-            var items = await LoadItemsFromFile(modsPath + "\\" + "optionals.txt");
+            var items = await LoadItemsFromTwoFiles(configPath + "\\" + "ENG_Optionals.txt", configPath + "\\" + "ES_Descriptions.txt");
             objectListView1.SetObjects(items);
 
             // CheckBox handling
@@ -252,13 +308,50 @@ namespace EldoriaLauncher
 
             objectListView1.BuildList();
 
-            
+
+        }
+
+
+        private async Task<List<ListItem>> LoadItemsFromTwoFiles(string filePath, string descPath)
+        {
+
+            var items = new List<ListItem>();
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var lines = System.IO.File.ReadAllLines(filePath);
+                var descs = System.IO.File.ReadAllLines(descPath);
+                for(int i = 0; i < lines.Length; i++)
+                {
+                    var parts = lines[i].Split(',');
+                    //Get project from url name
+
+                    if (parts.Length == 2)
+                    {
+                        var item = new ListItem
+                        {
+                            Category = parts[0].Trim(),
+                            ItemName = parts[1].Trim(),
+                            toolTip = descs[i],
+                            Checked = false
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show($"File not found: {filePath}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return items;
         }
 
         private async Task<List<ListItem>> LoadItemsFromFile(string filePath)
         {
+
             var items = new List<ListItem>();
-    
+
             //Connect to modrinth API
             userAgent = new UserAgent
             {
@@ -274,6 +367,7 @@ namespace EldoriaLauncher
 
             client = new ModrinthClient(options);
 
+
             if (System.IO.File.Exists(filePath))
             {
                 var lines = System.IO.File.ReadAllLines(filePath);
@@ -281,7 +375,7 @@ namespace EldoriaLauncher
                 {
                     var parts = line.Split(',');
                     //Get project from url name
-                    
+
                     if (parts.Length == 2)
                     {
                         var project = await client.Project.GetAsync(parts[1].Trim());
@@ -304,6 +398,40 @@ namespace EldoriaLauncher
             return items;
         }
 
+        private async void Mods_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F10 && e.Shift)
+            {
+                await HandleShiftF10Async();
+            }
+        }
+
+        private async Task HandleShiftF10Async()
+        {
+            string optionalsFilePath = Path.Combine(configPath, "optionals.txt");
+            string esDescriptionsFilePath = Path.Combine(configPath, "ES_Descriptions.txt");
+            string engOptionalsFilePath = Path.Combine(configPath, "ENG_Optionals.txt");
+            string engDescriptionsFilePath = Path.Combine(configPath, "ENG_Descriptions.txt");
+
+            var items = await LoadItemsFromFile(optionalsFilePath);
+
+                // Create ENG_Optionals and ENG_Descriptions files
+                using (StreamWriter engOptionalsWriter = new StreamWriter(engOptionalsFilePath, false))
+                using (StreamWriter engDescriptionsWriter = new StreamWriter(engDescriptionsFilePath, false))
+                {
+                    foreach (var item in items)
+                    {
+                        // Write to ENG_Optionals
+                        engOptionalsWriter.WriteLine($"{item.Category},{item.ItemName}");
+
+                        // Write to ENG_Descriptions
+                        string singleLineDescription = item.toolTip.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+                        engDescriptionsWriter.WriteLine(singleLineDescription);
+                    }
+                }
+
+                MessageBox.Show("Los archivos ENG_Optionals y ENG_Descriptions se crearon correctamente. Si no tienes ni puta idea que significa esto, ignoralo.");
+        }
     }
 
     public class ListItem
