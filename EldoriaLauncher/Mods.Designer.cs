@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Mods));
             button1 = new Button();
             currentDownload = new Label();
             progressBar1 = new ProgressBar();
@@ -116,7 +117,6 @@
             // 
             objectListView1.BackColor = Color.White;
             objectListView1.CellEditUseWholeCell = false;
-            objectListView1.CheckBoxes = true;
             objectListView1.Location = new Point(203, 74);
             objectListView1.Name = "objectListView1";
             objectListView1.Size = new Size(210, 254);
@@ -138,6 +138,7 @@
             Controls.Add(currentDownload);
             Controls.Add(button1);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
             MinimizeBox = false;

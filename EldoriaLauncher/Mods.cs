@@ -41,8 +41,9 @@ namespace EldoriaLauncher
         public Mods()
         {
             InitializeComponent();
-            LoadCheckboxes();
+            
             InitializeObjectListView();
+            
             this.KeyPreview = true;
             //GetMods();
         }
@@ -117,8 +118,6 @@ namespace EldoriaLauncher
             if (System.IO.File.Exists(docPath))
             {
                 var lines = System.IO.File.ReadAllLines(docPath);
-                //var checkedMods = new HashSet<string>(lines.Select(line => line.Trim()));
-                
 
                 foreach (OLVListItem listViewItem in objectListView1.Items)
                 {
@@ -131,8 +130,7 @@ namespace EldoriaLauncher
                     }
                 }
 
-                //objectListView1.RefreshObjects(objectListView1.Objects.Cast<object>().ToList());
-               objectListView1.Refresh();
+                objectListView1.RefreshObjects(objectListView1.Items);
             }
         }
 
@@ -266,6 +264,8 @@ namespace EldoriaLauncher
             objectListView1.Clear();
             objectListView1.Groups.Clear();
 
+            objectListView1.CheckBoxes = true;
+
             // Create columns
             OLVColumn itemColumn = new OLVColumn("Item", "ItemName");
             itemColumn.Width = 185; // Adjust width if necessary
@@ -277,16 +277,16 @@ namespace EldoriaLauncher
             objectListView1.SetObjects(items);
 
             // CheckBox handling
-            objectListView1.CellEditActivation = ObjectListView.CellEditActivateMode.SingleClick;
-            objectListView1.CheckStateGetter = delegate (object rowObject)
-            {
-                return ((ListItem)rowObject).Checked ? CheckState.Checked : CheckState.Unchecked;
-            };
-            objectListView1.CheckStatePutter = delegate (object rowObject, CheckState value)
-            {
-                ((ListItem)rowObject).Checked = (value == CheckState.Checked);
-                return value;
-            };
+            //objectListView1.CellEditActivation = ObjectListView.CellEditActivateMode.None;
+            //objectListView1.CheckStateGetter = delegate (object rowObject)
+            //{
+            //    return ((ListItem)rowObject).Checked ? CheckState.Checked : CheckState.Unchecked;
+            //};
+            //objectListView1.CheckStatePutter = delegate (object rowObject, CheckState value)
+            //{
+            //    ((ListItem)rowObject).Checked = (value == CheckState.Checked);
+            //    return value;
+            //};
 
             // Group by category
             itemColumn.GroupKeyGetter = delegate (object rowObject)
@@ -305,6 +305,8 @@ namespace EldoriaLauncher
                 }
                 return null;
             };
+
+            LoadCheckboxes();
 
             objectListView1.BuildList();
 

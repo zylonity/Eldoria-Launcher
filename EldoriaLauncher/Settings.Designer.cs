@@ -28,12 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             RamBox = new ComboBox();
             OfflineUsernameBox = new TextBox();
             pictureBox1 = new PictureBox();
             checkBox1 = new CheckBox();
-            label1 = new Label();
-            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -47,7 +46,7 @@
             RamBox.ForeColor = Color.White;
             RamBox.FormattingEnabled = true;
             RamBox.Items.AddRange(new object[] { "4096", "5120", "6144", "7168", "8192", "9216", "10240", "11264", "12288", "13312", "14336", "15360", "16384", "17408", "18432", "19456", "20480" });
-            RamBox.Location = new Point(74, 222);
+            RamBox.Location = new Point(72, 285);
             RamBox.Margin = new Padding(4, 3, 4, 3);
             RamBox.Name = "RamBox";
             RamBox.Size = new Size(289, 24);
@@ -60,7 +59,7 @@
             OfflineUsernameBox.BackColor = Color.FromArgb(110, 110, 110);
             OfflineUsernameBox.Font = new Font("Minecraft", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             OfflineUsernameBox.ForeColor = Color.White;
-            OfflineUsernameBox.Location = new Point(74, 113);
+            OfflineUsernameBox.Location = new Point(72, 194);
             OfflineUsernameBox.Margin = new Padding(4, 3, 4, 3);
             OfflineUsernameBox.Name = "OfflineUsernameBox";
             OfflineUsernameBox.Size = new Size(289, 25);
@@ -96,42 +95,17 @@
             checkBox1.UseVisualStyleBackColor = false;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Light Pixel-7", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.White;
-            label1.Location = new Point(72, 81);
-            label1.Name = "label1";
-            label1.Size = new Size(238, 29);
-            label1.TabIndex = 7;
-            label1.Text = "Nombre del usuario";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.BackColor = Color.Transparent;
-            label2.Font = new Font("Light Pixel-7", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.White;
-            label2.Location = new Point(72, 190);
-            label2.Name = "label2";
-            label2.Size = new Size(263, 29);
-            label2.TabIndex = 8;
-            label2.Text = "Cantidad de ram (Mb)";
-            // 
             // Settings
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackgroundImage = Properties.Resources.Launcher_fondo_menus;
+            BackgroundImage = Properties.Resources.fondo_ajustes;
             ClientSize = new Size(433, 489);
-            Controls.Add(label2);
-            Controls.Add(label1);
             Controls.Add(checkBox1);
             Controls.Add(pictureBox1);
             Controls.Add(OfflineUsernameBox);
             Controls.Add(RamBox);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -150,7 +124,5 @@
         private System.Windows.Forms.TextBox OfflineUsernameBox;
         private System.Windows.Forms.PictureBox pictureBox1;
         private CheckBox checkBox1;
-        private Label label1;
-        private Label label2;
     }
 }

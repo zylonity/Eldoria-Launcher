@@ -65,7 +65,6 @@ namespace EldoriaLauncher
         {
             InitializeComponent();
             checkFabricVer();
-            pictureBox1_EnabledChanged();
             PlayActive();
         }
 
@@ -95,8 +94,11 @@ namespace EldoriaLauncher
         //Pressing play in offline mode
         private async void pictureBox1_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image = Properties.Resources.jugar_disabled;
+
             pictureBox1.Enabled = false;
+            pictureBox4.Enabled = false;
+            pictureBox5.Enabled = false;
+
 
             RunBar.Visible = true;
             textBox1.Visible = true;
@@ -121,7 +123,7 @@ namespace EldoriaLauncher
             mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
 
 
-            
+
             //install
             var fabric = fabricVersions.GetVersionMetadata(mcVer);
             await fabric.SaveAsync(path);
@@ -136,7 +138,7 @@ namespace EldoriaLauncher
                 Session = MSession.GetOfflineSession(offlineUsername),
             });
 
-            if((bool)Properties.Settings.Default["Console"] == true)
+            if ((bool)Properties.Settings.Default["Console"] == true)
             {
                 Logging logger = new Logging();
                 logger.Activate();
@@ -149,12 +151,13 @@ namespace EldoriaLauncher
                 process.Start();
             }
 
-            
+
 
             await process.WaitForExitAsync();
             this.Show();
             pictureBox1.Enabled = true;
-            pictureBox1.Image = Properties.Resources.jugar1;
+            pictureBox4.Enabled = true;
+            pictureBox5.Enabled = true;
 
             textBox1.Visible = false;
             RunBar.Visible = false;
@@ -164,34 +167,43 @@ namespace EldoriaLauncher
 
         private void pictureBox1_MouseEnter(object sender, EventArgs e)
         {
-            pictureBox1.Image = Properties.Resources.jugar2;
+            if (pictureBox1.Enabled == true)
+            {
+                pictureBox1.Image = Properties.Resources.boton_jugar2;
+            }
+
             PlayActive();
         }
 
         private void pictureBox1_MouseLeave(object sender, EventArgs e)
         {
-            pictureBox1.Image = Properties.Resources.jugar1;
+            if (pictureBox1.Enabled == true)
+                pictureBox1.Image = Properties.Resources.boton_jugar;
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            pictureBox1.Image = Properties.Resources.jugar3;
+            if (pictureBox1.Enabled == true)
+                pictureBox1.Image = Properties.Resources.boton_jugar3;
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            pictureBox1.Image = Properties.Resources.jugar2;
+            if (pictureBox1.Enabled == true)
+                pictureBox1.Image = Properties.Resources.boton_jugar2;
         }
 
-        private void pictureBox1_EnabledChanged(object sender = null, EventArgs e = null)
+        private void pictureBox1_EnabledChanged(object sender, EventArgs e)
         {
-            if (pictureBox1.Enabled == true)
+
+
+            if (pictureBox1.Enabled == false)
             {
-                pictureBox1.Image = Properties.Resources.jugar1;
+                pictureBox1.Image = Properties.Resources.boton_jugar_disabled;
             }
             else
             {
-                pictureBox1.Image = Properties.Resources.jugar_disabled;
+                pictureBox1.Image = Properties.Resources.boton_jugar;
             }
         }
 
@@ -230,22 +242,22 @@ namespace EldoriaLauncher
 
         private void pictureBox4_MouseEnter(object sender, EventArgs e)
         {
-            pictureBox4.Image = Properties.Resources.menu2;
+            pictureBox4.Image = Properties.Resources.boton_ajustes2;
         }
 
         private void pictureBox4_MouseLeave(object sender, EventArgs e)
         {
-            pictureBox4.Image = Properties.Resources.menu1;
+            pictureBox4.Image = Properties.Resources.boton_ajustes;
         }
 
         private void pictureBox4_MouseDown(object sender, MouseEventArgs e)
         {
-            pictureBox4.Image = Properties.Resources.menu3;
+            pictureBox4.Image = Properties.Resources.boton_ajustes3;
         }
 
         private void pictureBox4_MouseUp(object sender, MouseEventArgs e)
         {
-            pictureBox4.Image = Properties.Resources.menu2;
+            pictureBox4.Image = Properties.Resources.boton_ajustes2;
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
@@ -260,22 +272,22 @@ namespace EldoriaLauncher
 
         private void pictureBox5_MouseEnter(object sender, EventArgs e)
         {
-            pictureBox5.Image = Properties.Resources.menu2;
+            pictureBox5.Image = Properties.Resources.boton_mods2;
         }
 
         private void pictureBox5_MouseLeave(object sender, EventArgs e)
         {
-            pictureBox5.Image = Properties.Resources.menu1;
+            pictureBox5.Image = Properties.Resources.boton_mods;
         }
 
         private void pictureBox5_MouseDown(object sender, MouseEventArgs e)
         {
-            pictureBox5.Image = Properties.Resources.menu3;
+            pictureBox5.Image = Properties.Resources.boton_mods3;
         }
 
         private void pictureBox5_MouseUp(object sender, MouseEventArgs e)
         {
-            pictureBox5.Image = Properties.Resources.menu2;
+            pictureBox5.Image = Properties.Resources.boton_mods2;
         }
 
         private void pictureBox5_Click(object sender, EventArgs e)
@@ -291,6 +303,30 @@ namespace EldoriaLauncher
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void pictureBox5_EnabledChanged(object sender, EventArgs e)
+        {
+            if (pictureBox5.Enabled == false)
+            {
+                pictureBox5.Image = Properties.Resources.boton_mods_disabled;
+            }
+            else
+            {
+                pictureBox5.Image = Properties.Resources.boton_mods;
+            }
+        }
+
+        private void pictureBox4_EnabledChanged(object sender, EventArgs e)
+        {
+            if (pictureBox4.Enabled == false)
+            {
+                pictureBox4.Image = Properties.Resources.boton_ajustes_disabled;
+            }
+            else
+            {
+                pictureBox4.Image = Properties.Resources.boton_ajustes;
+            }
         }
     }
 }

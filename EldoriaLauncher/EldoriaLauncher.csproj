@@ -7,7 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Resources\Logo_tierra.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Logo_tierra.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CmlLib.Core" Version="3.3.10" />

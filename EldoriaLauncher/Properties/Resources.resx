@@ -124,46 +124,94 @@
   <data name="minimizar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\minimizar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="jugar_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\jugar_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Launcher_fondo_menus" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Launcher_fondo_menus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Launcher" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Launcher.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="jugar1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\jugar1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="jugar3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\jugar3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="background" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\background.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="jugar2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\jugar2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="cerrar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cerrar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton-preset2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton-preset2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_ajustes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_ajustes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_ajustes2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_ajustes2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_ajustes3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_ajustes3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_jugar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_jugar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_jugar2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_jugar2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_jugar3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_jugar3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_mods" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_mods.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_mods2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_mods2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_mods3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_mods3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="boton_preset" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_preset.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="carpeta_mods" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\carpeta_mods.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="carpeta_mods2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\carpeta_mods2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondo_ajustes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fondo_ajustes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondo_modsl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fondo_modsl.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="info" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="light_pixel-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\light_pixel-7.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Minecraft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Minecraft.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="preset_añadir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\preset_añadir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="preset_añadir2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\preset_añadir2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="preset_eliminar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\preset_eliminar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="preset_eliminar2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\preset_eliminar2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="blank_gui" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\blank_gui.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="boton_ajustes_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_ajustes_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu_gui" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu_gui.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="boton_jugar_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_jugar_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="menu1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\menu1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="boton_mods_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\boton_mods_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bg_modslist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bg_modslist.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Logo_tierra" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Logo_tierra.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

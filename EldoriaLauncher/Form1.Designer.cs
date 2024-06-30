@@ -48,11 +48,11 @@
             // 
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Enabled = false;
-            pictureBox1.Image = Properties.Resources.jugar1;
-            pictureBox1.Location = new Point(79, 172);
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(81, 173);
             pictureBox1.Margin = new Padding(4, 3, 4, 3);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(275, 75);
+            pictureBox1.Size = new Size(275, 71);
             pictureBox1.TabIndex = 13;
             pictureBox1.TabStop = false;
             pictureBox1.EnabledChanged += pictureBox1_EnabledChanged;
@@ -92,13 +92,14 @@
             // pictureBox4
             // 
             pictureBox4.BackColor = Color.Transparent;
-            pictureBox4.Image = Properties.Resources.menu1;
-            pictureBox4.Location = new Point(226, 263);
+            pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
+            pictureBox4.Location = new Point(236, 257);
             pictureBox4.Margin = new Padding(4, 3, 4, 3);
             pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(176, 67);
+            pictureBox4.Size = new Size(176, 61);
             pictureBox4.TabIndex = 16;
             pictureBox4.TabStop = false;
+            pictureBox4.EnabledChanged += pictureBox4_EnabledChanged;
             pictureBox4.Click += pictureBox4_Click;
             pictureBox4.MouseDown += pictureBox4_MouseDown;
             pictureBox4.MouseEnter += pictureBox4_MouseEnter;
@@ -125,13 +126,14 @@
             // pictureBox5
             // 
             pictureBox5.BackColor = Color.Transparent;
-            pictureBox5.Image = Properties.Resources.menu1;
-            pictureBox5.Location = new Point(31, 263);
+            pictureBox5.Image = (Image)resources.GetObject("pictureBox5.Image");
+            pictureBox5.Location = new Point(24, 257);
             pictureBox5.Margin = new Padding(4, 3, 4, 3);
             pictureBox5.Name = "pictureBox5";
-            pictureBox5.Size = new Size(176, 67);
+            pictureBox5.Size = new Size(176, 61);
             pictureBox5.TabIndex = 20;
             pictureBox5.TabStop = false;
+            pictureBox5.EnabledChanged += pictureBox5_EnabledChanged;
             pictureBox5.Click += pictureBox5_Click;
             pictureBox5.MouseDown += pictureBox5_MouseDown;
             pictureBox5.MouseEnter += pictureBox5_MouseEnter;
