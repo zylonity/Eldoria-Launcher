@@ -25,8 +25,6 @@ namespace EldoriaLauncher
             Properties.Settings.Default["AppVer"] = firstLine;
             Properties.Settings.Default.Save();
 
-            MessageBox.Show("Version: " + firstLine);
-            //return "ASS";
         }
 
 
