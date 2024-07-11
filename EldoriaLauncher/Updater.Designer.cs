@@ -45,6 +45,7 @@
             checkedListBox1.Anchor = AnchorStyles.Top;
             checkedListBox1.BackColor = Color.FromArgb(200, 200, 200);
             checkedListBox1.CheckOnClick = true;
+            checkedListBox1.Enabled = false;
             checkedListBox1.FormattingEnabled = true;
             checkedListBox1.Location = new Point(86, 52);
             checkedListBox1.Name = "checkedListBox1";

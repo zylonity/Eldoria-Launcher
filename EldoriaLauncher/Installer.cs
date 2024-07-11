@@ -117,10 +117,10 @@ namespace EldoriaLauncher
             Properties.Settings.Default.Save();
             
             //Filter the path names to just file names
-            for (int i = 0; i < eldoriaIndex.files.Length; i++)
-            {
-                eldoriaIndex.files[i].path = eldoriaIndex.files[i].path.Split("/")[1];
-            }
+            //for (int i = 0; i < eldoriaIndex.files.Length; i++)
+            //{
+            //    eldoriaIndex.files[i].path = eldoriaIndex.files[i].path.Split("/")[1];
+            //}
 
 
             //Add all mods to the list
@@ -180,11 +180,11 @@ namespace EldoriaLauncher
 
                 if (downloadAsync)
                 {
-                    webClient.DownloadFileAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+                    webClient.DownloadFileAsync(new Uri(downloadUrl), eldoriaPath + "\\" + filename);
                 }
                 else
                 {
-                    await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), modsPath + "\\" + filename);
+                    await webClient.DownloadFileTaskAsync(new Uri(downloadUrl), eldoriaPath + "\\" + filename);
                 }
 
 

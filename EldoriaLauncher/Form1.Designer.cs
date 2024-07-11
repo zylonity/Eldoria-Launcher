@@ -153,7 +153,7 @@
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImage = Properties.Resources.fondo_principal;
             ClientSize = new Size(433, 489);
             Controls.Add(textBox1);
             Controls.Add(pictureBox5);

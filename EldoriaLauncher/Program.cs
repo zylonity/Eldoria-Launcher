@@ -45,6 +45,25 @@ namespace EldoriaLauncher
             
         }
 
+        public static int CompareVersions(string v1, string v2)
+        {
+            var v1Components = v1.Split('.').Select(int.Parse).ToArray();
+            var v2Components = v2.Split('.').Select(int.Parse).ToArray();
+
+            int maxLength = Math.Max(v1Components.Length, v2Components.Length);
+
+            for (int i = 0; i < maxLength; i++)
+            {
+                int v1Component = i < v1Components.Length ? v1Components[i] : 0;
+                int v2Component = i < v2Components.Length ? v2Components[i] : 0;
+
+                if (v1Component < v2Component) return -1;
+                if (v1Component > v2Component) return 1;
+            }
+
+            return 0;
+        }
+
         static void Main()
         {
             // To customize application configuration such as set high DPI settings or default font,
@@ -59,12 +78,12 @@ namespace EldoriaLauncher
                 string currentVer = eldoriaIndex.versionId;
                 string onlineVer = GetVersion().Result;
 
-                var result = currentVer.CompareTo(onlineVer);
+                int result = CompareVersions(currentVer, onlineVer);
+
                 if (result < 0)
                     Application.Run(new Updater());
                 else
                     Application.Run(new Form1());
-
             }
             else
             {
