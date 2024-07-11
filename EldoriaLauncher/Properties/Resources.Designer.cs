@@ -61,6 +61,15 @@ namespace EldoriaLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1.5.0.
+        /// </summary>
+        internal static string AppVersion {
+            get {
+                return ResourceManager.GetString("AppVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap atrás {

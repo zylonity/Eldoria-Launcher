@@ -2,6 +2,7 @@
 using System.Net;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
+using CmlLib.Core.ProcessBuilder;
 using System.Runtime.InteropServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Net.WebRequestMethods;
@@ -9,14 +10,14 @@ using System.Diagnostics;
 using System.Threading;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using Modrinth;
-using CmlLib.Core.Installer.FabricMC;
-using CmlLib.Core.Downloader;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
 using EldoriaLauncher.Properties;
 using EldoriaLauncher.MrPack;
 using System.Text.Json;
 using Modrinth.Models;
+using CmlLib.Core.ModLoaders.FabricMC;
+using System.Reflection.Metadata.Ecma335;
 
 namespace EldoriaLauncher
 {
@@ -68,17 +69,6 @@ namespace EldoriaLauncher
             PlayActive();
         }
 
-        private void Downloader_FileChanged(DownloadFileChangedEventArgs e)
-        {
-            textBox1.Text = e.FileName;
-        }
-
-        private void Downloader_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {
-            Console.WriteLine("{0}%", e.ProgressPercentage);
-            RunBar.Value = e.ProgressPercentage;
-        }
-
         void checkFabricVer()
         {
             var eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(mcPathStr + "\\modrinth.index.json"));
@@ -110,14 +100,24 @@ namespace EldoriaLauncher
             ram = (int)Properties.Settings.Default["Ram"];
 
             var path = new MinecraftPath(mcPathStr);
-            var launcher = new CMLauncher(path);
+            var launcher = new MinecraftLauncher(path);
 
-            launcher.FileChanged += Downloader_FileChanged;
-            launcher.ProgressChanged += Downloader_ProgressChanged;
+            launcher.FileProgressChanged += (sender, args) =>
+            {
+                textBox1.Text = args.Name;
+            };
+            launcher.ByteProgressChanged += (sender, args) =>
+            {
+                var percentage = (args.ProgressedBytes / args.TotalBytes) * 100;
+                RunBar.Value = (int)percentage;
+            };
 
             // initialize fabric version loader
-            var fabricVersionLoader = new FabricVersionLoader();
-            var fabricVersions = await fabricVersionLoader.GetVersionMetadatasAsync();
+            var httpCli = new HttpClient();
+            var fabricInstaller = new FabricInstaller(httpCli);
+            //var fabricLoaders = fabricInstaller.GetLoaders((string)Properties.Settings.Default["MinecraftVer"]);
+
+            //var selectedLoader = fabricLoaders.Result.Find(loader => loader.Version == (string)Properties.Settings.Default["FabricVer"]);
 
             //get version
             mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
@@ -125,8 +125,8 @@ namespace EldoriaLauncher
 
 
             //install
-            var fabric = fabricVersions.GetVersionMetadata(mcVer);
-            await fabric.SaveAsync(path);
+            await fabricInstaller.Install((string)Properties.Settings.Default["MinecraftVer"], (string)Properties.Settings.Default["FabricVer"], path);
+            
 
             // update version list
             await launcher.GetAllVersionsAsync();
@@ -135,7 +135,7 @@ namespace EldoriaLauncher
             {
 
                 MaximumRamMb = ram,
-                Session = MSession.GetOfflineSession(offlineUsername),
+                Session = MSession.CreateOfflineSession(offlineUsername),
             });
 
             if ((bool)Properties.Settings.Default["Console"] == true)

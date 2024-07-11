@@ -149,7 +149,7 @@ namespace EldoriaLauncher
             userAgent = new UserAgent
             {
                 ProjectName = "Eldoria-Launcher",
-                ProjectVersion = "1.2.0",
+                ProjectVersion = (string)Properties.Settings.Default["AppVer"],
                 GitHubUsername = "zylonity",
             };
 
@@ -432,7 +432,7 @@ namespace EldoriaLauncher
             userAgent = new UserAgent
             {
                 ProjectName = "Eldoria-Launcher",
-                ProjectVersion = "1.2.0",
+                ProjectVersion = (string)Properties.Settings.Default["AppVer"],
                 GitHubUsername = "zylonity",
             };
 

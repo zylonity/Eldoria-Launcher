@@ -13,12 +13,29 @@ namespace EldoriaLauncher
         /// </summary>
         [STAThread]
 
-        static async Task<string> GetVersion()
+        static void GetLauncherVersion()
+        {
+            string firstLine = "";
+            string versionContent = Properties.Resources.AppVersion; // This refers to the resource name
+            using (StringReader reader = new StringReader(versionContent))
+            {
+                firstLine = reader.ReadLine();
+            }
+
+            Properties.Settings.Default["AppVer"] = firstLine;
+            Properties.Settings.Default.Save();
+
+            MessageBox.Show("Version: " + firstLine);
+            //return "ASS";
+        }
+
+
+        static async Task<string> GetModpackVersion()
         {
             var userAgent = new UserAgent
             {
                 ProjectName = "Eldoria-Launcher",
-                ProjectVersion = "1.2.0",
+                ProjectVersion = (string)Properties.Settings.Default["AppVer"],
                 GitHubUsername = "zylonity",
             };
 
@@ -76,7 +93,9 @@ namespace EldoriaLauncher
                 ModIndex eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(mcPathStr + "\\modrinth.index.json"));
 
                 string currentVer = eldoriaIndex.versionId;
-                string onlineVer = GetVersion().Result;
+                string onlineVer = GetModpackVersion().Result;
+
+                GetLauncherVersion();
 
                 int result = CompareVersions(currentVer, onlineVer);
 
