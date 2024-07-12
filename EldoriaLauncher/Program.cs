@@ -1,6 +1,7 @@
 using EldoriaLauncher.MrPack;
 using Modrinth;
 using Modrinth.Exceptions;
+using System.Diagnostics;
 using System.Text.Json;
 using static System.Windows.Forms.Design.AxImporter;
 
@@ -12,7 +13,6 @@ namespace EldoriaLauncher
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-
         static void GetLauncherVersion()
         {
             string firstLine = "";
@@ -24,9 +24,66 @@ namespace EldoriaLauncher
 
             Properties.Settings.Default["AppVer"] = firstLine;
             Properties.Settings.Default.Save();
-
         }
 
+        static private async Task<string> GetLatestVersionAsync()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string url = "https://raw.githubusercontent.com/zylonity/Eldoria-Launcher/master/EldoriaLauncher/Resources/AppVersion.txt";
+                return await client.GetStringAsync(url);
+            }
+        }
+
+        static private async Task UpdateApplicationAsync()
+        {
+            string updaterUrl = "https://github.com/zylonity/Eldoria-Launcher/raw/master/Updater.exe";
+            string tempUpdaterPath = Path.Combine(Path.GetTempPath(), "Updater.exe");
+
+            using (HttpClient client = new HttpClient())
+            {
+                byte[] data = await client.GetByteArrayAsync(updaterUrl);
+                await System.IO.File.WriteAllBytesAsync(tempUpdaterPath, data);
+            }
+
+            string currentExePath = Application.ExecutablePath;
+
+            var processInfo = new ProcessStartInfo(tempUpdaterPath, "\"" + currentExePath + "\"")
+            {
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+
+            try
+            {
+                Process.Start(processInfo);
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("El proceso de actualización requiere privilegios de administrador. Por favor, inténtelo de nuevo. " + ex.Message);
+            }
+        }
+
+        static private async Task CheckForUpdatesAsync()
+        {
+            string currentVersion = (string)Properties.Settings.Default["AppVer"];
+            string latestVersion = await GetLatestVersionAsync();
+
+            if (currentVersion != latestVersion)
+            {
+                DialogResult dialogResult = MessageBox.Show("Una nueva versión está disponible. ¿Desea actualizar?", "Actualización disponible", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    await UpdateApplicationAsync();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Tienes la última versión.");
+            }
+        }
 
         static async Task<string> GetModpackVersion()
         {
@@ -44,20 +101,17 @@ namespace EldoriaLauncher
 
             var client = new ModrinthClient(options);
 
-
             try
             {
                 var project = await client.Project.GetAsync("Eldoria");
                 var version = await client.Version.GetAsync(project.Versions[project.Versions.Length - 1]);
                 return version.VersionNumber;
             }
-            // Or you can catch the exception and handle all non-200 status codes
-            catch (ModrinthApiException e)
+            catch (ModrinthApiException)
             {
-                MessageBox.Show("No se encuentra el proyecto de Eldoria en Modrinth.");
+                MessageBox.Show("No se encuentra el proyecto de Eldoria en Modrinth. ¿Tienes internet?");
                 return "1.0.0";
             }
-            
         }
 
         public static int CompareVersions(string v1, string v2)
@@ -81,11 +135,10 @@ namespace EldoriaLauncher
 
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
 
             ApplicationConfiguration.Initialize();
+
             if (Directory.Exists(mcPathStr))
             {
                 ModIndex eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(mcPathStr + "\\modrinth.index.json"));
@@ -94,6 +147,7 @@ namespace EldoriaLauncher
                 string onlineVer = GetModpackVersion().Result;
 
                 GetLauncherVersion();
+                CheckForUpdatesAsync().Wait();
 
                 int result = CompareVersions(currentVer, onlineVer);
 
