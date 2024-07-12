@@ -78,7 +78,7 @@ namespace EldoriaLauncher
 
             if (currentVersion != latestVersion)
             {
-                DialogResult dialogResult = MessageBox.Show("Una nueva versión está disponible. ¿Desea actualizar?", "Actualización disponible", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show("Una nueva versión está disponible. " + latestVersion + " ¿Desea actualizar?", "Actualización disponible", MessageBoxButtons.YesNo);
 
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -87,7 +87,7 @@ namespace EldoriaLauncher
             }
             else
             {
-                MessageBox.Show("Tienes la última versión.");
+                MessageBox.Show("Tienes la última versión. " + currentVersion);
             }
         }
 
