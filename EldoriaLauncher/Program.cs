@@ -19,7 +19,7 @@ namespace EldoriaLauncher
         static void GetLauncherVersion()
         {
             string firstLine = "";
-            string versionContent = Properties.Resources.AppVersion; // This refers to the resource name
+            string versionContent = Properties.Resources.AppVersion; 
             using (StringReader reader = new StringReader(versionContent))
             {
                 firstLine = reader.ReadLine();
@@ -27,6 +27,7 @@ namespace EldoriaLauncher
 
             Properties.Settings.Default["AppVer"] = firstLine;
             Properties.Settings.Default.Save();
+            
         }
 
         static private async Task<string> GetLatestVersionAsync()
@@ -142,6 +143,8 @@ namespace EldoriaLauncher
         {
             string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
 
+            GetLauncherVersion();
+
             ApplicationConfiguration.Initialize();
 
             if (Directory.Exists(mcPathStr))
@@ -151,7 +154,7 @@ namespace EldoriaLauncher
                 string currentVer = eldoriaIndex.versionId;
                 string onlineVer = GetModpackVersion().Result;
 
-                GetLauncherVersion();
+                
                 CheckForUpdatesAsync().Wait();
 
                 int result = CompareVersions(currentVer, onlineVer);

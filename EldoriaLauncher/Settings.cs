@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EldoriaLauncher
@@ -13,9 +7,15 @@ namespace EldoriaLauncher
     public partial class Settings : Form
     {
         Form1 mainForm = Application.OpenForms.OfType<Form1>().Single();
+
         public Settings()
         {
             InitializeComponent();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
             OfflineUsernameBox.Text = (string)Properties.Settings.Default["Username"];
             RamBox.SelectedIndex = (int)Properties.Settings.Default["RamIndex"];
             checkBox1.Checked = (bool)Properties.Settings.Default["Console"];
@@ -46,10 +46,9 @@ namespace EldoriaLauncher
             mainForm.Location = this.Location;
             mainForm.Show();
             mainForm.PlayActive();
-
         }
 
-        //Move window
+        // Move window
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
 
@@ -75,7 +74,7 @@ namespace EldoriaLauncher
 
         private void Settings_Load(object sender, EventArgs e)
         {
-
+            // This can be removed if not used
         }
     }
 }
