@@ -61,7 +61,7 @@ namespace EldoriaLauncher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1.8.0.
+        ///   Looks up a localized string similar to 1.9.0.
         /// </summary>
         internal static string AppVersion {
             get {

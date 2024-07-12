@@ -85,10 +85,6 @@ namespace EldoriaLauncher
                     await UpdateApplicationAsync();
                 }
             }
-            else
-            {
-                MessageBox.Show("Tienes la última versión. " + currentVersion);
-            }
         }
 
         static async Task<string> GetModpackVersion()
