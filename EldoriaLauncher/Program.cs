@@ -2,8 +2,11 @@ using EldoriaLauncher.MrPack;
 using Modrinth;
 using Modrinth.Exceptions;
 using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Text.Json;
-using static System.Windows.Forms.Design.AxImporter;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace EldoriaLauncher
 {
@@ -57,7 +60,9 @@ namespace EldoriaLauncher
             try
             {
                 Process.Start(processInfo);
+                // Ensure the application exits
                 Application.Exit();
+                Environment.Exit(0);
             }
             catch (Exception ex)
             {
