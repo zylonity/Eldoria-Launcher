@@ -37,6 +37,10 @@ namespace EldoriaLauncher
         {
             button1.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
+            if (System.IO.Directory.Exists(tempUpdatePath))
+            {
+                System.IO.Directory.Delete(tempUpdatePath, true);
+            }
             System.IO.Directory.CreateDirectory(tempUpdatePath);
 
             userAgent = new UserAgent
@@ -78,10 +82,11 @@ namespace EldoriaLauncher
             };
 
             //Download, extract, move files, and delete the zip file
-            label3.Text = "Descargando y extrayendo info";
+            label3.Text = "Descargando info";
             await webClient.DownloadFileTaskAsync(new Uri(version.Files[0].Url), tempUpdatePath + "\\" + version.Files[0].FileName + ".zip");
 
-            ZipFile.ExtractToDirectory(tempUpdatePath + "\\" + version.Files[0].FileName + ".zip", tempUpdatePath);
+            label3.Text = "Extrayendo info";
+            ZipFile.ExtractToDirectory(tempUpdatePath + "\\" + version.Files[0].FileName + ".zip", tempUpdatePath, true);
 
             label3.Text = "Moviendo archivos";
 
@@ -94,6 +99,7 @@ namespace EldoriaLauncher
             {
                 Directory.Move(dir.FullName, tempUpdatePath + "\\" + dir.Name);
             }
+
 
             label3.Text = "Borrando archivos temporales";
             Directory.Delete(eldoriaPath + "\\config", true);
@@ -137,8 +143,7 @@ namespace EldoriaLauncher
                     
                 }
             }
-            MessageBox.Show(count.ToString() + " Mods Borrados");
-            MessageBox.Show(oldMods);
+            MessageBox.Show(count.ToString() + " Mods Borrados \n \n" + oldMods);
 
             
 
