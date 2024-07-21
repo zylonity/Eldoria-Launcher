@@ -33,6 +33,34 @@ namespace EldoriaLauncher
             GetNewMods();
         }
 
+        void UpdateConfigs()
+        {
+            //Deal with files
+            foreach (var sourceFilePath in Directory.GetFiles(tempUpdatePath + "\\updated_configs"))
+            {
+                var destFilePath = Path.Combine(eldoriaPath + "\\config", Path.GetFileName(sourceFilePath));
+
+                if (System.IO.File.Exists(destFilePath))
+                {
+                    System.IO.File.Delete(destFilePath);
+                }
+
+                System.IO.File.Copy(sourceFilePath, destFilePath);
+            }
+
+            //Deal with folders
+            foreach (var sourceSubDir in Directory.GetDirectories(tempUpdatePath + "\\updated_configs"))
+            {
+                var destSubDir = Path.Combine(eldoriaPath + "\\config", Path.GetFileName(sourceSubDir));
+
+                if (Directory.Exists(destSubDir))
+                {
+                    Directory.Delete(destSubDir, true);
+                }
+                Directory.Move(sourceSubDir, destSubDir);
+            }
+        }
+
         async Task GetNewMods()
         {
             button1.Enabled = false;
@@ -101,9 +129,27 @@ namespace EldoriaLauncher
             }
 
 
-            label3.Text = "Borrando archivos temporales";
-            Directory.Delete(eldoriaPath + "\\config", true);
-            Directory.Move(tempUpdatePath + "\\config", eldoriaPath + "\\config");
+            label3.Text = "Borrando traducciones";
+            if(Directory.Exists(eldoriaPath + "\\translation_docs"))
+            {
+                Directory.Delete(eldoriaPath + "\\translation_docs", true);
+            }
+
+            label3.Text = "Actualizando traducciones";
+            if (Directory.Exists(tempUpdatePath + "\\translation_docs"))
+            {
+                Directory.Move(tempUpdatePath + "\\translation_docs", eldoriaPath + "\\translation_docs");
+            }
+            else
+            {
+                MessageBox.Show("No se encuentra la carpeta con las traducciones! \n \nAprende ingles con Duolingo, la forma más popular para aprender inglés en línea. \nAprende inglés en solo 5 minutos diarios con nuestras divertidas lecciones. No importa si estás empezando con lo básico o quieres practicar tu lectura, escritura y conversación; está científicamente comprobado que Duolingo funciona.");
+            }
+
+            if (Directory.Exists(tempUpdatePath + "\\updated_configs"))
+            {
+                UpdateConfigs();
+            }
+            Directory.Delete(tempUpdatePath + "\\config", true);
 
             System.IO.File.Delete(tempUpdatePath + "\\" + version.Files[0].FileName + ".zip");
 

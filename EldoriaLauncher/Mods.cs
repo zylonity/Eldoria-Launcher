@@ -28,7 +28,7 @@ namespace EldoriaLauncher
 
         string eldoriaPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
-        string configPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\config";
+        string translationDocsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\translation_docs";
 
         bool downloadAsync = false;
 
@@ -48,6 +48,12 @@ namespace EldoriaLauncher
             PopulateComboBox();
 
             this.KeyPreview = true;
+
+            if (!Directory.Exists(translationDocsPath))
+            {
+                MessageBox.Show("La carpeta translation_docs no existe. Por favor, reinstala el launcher.");
+                Application.Exit();
+            }
             //GetMods();
         }
 
@@ -130,8 +136,8 @@ namespace EldoriaLauncher
             pictureBox1.Visible = false;
 
             string docPath = eldoriaPath + "\\" + "downloadedOptionalMods.txt";
-            string ogConfigPath = configPath + "\\" + "optionals.txt";
-            string engOptionalsPath = configPath + "\\" + "ENG_Optionals.txt";
+            string ogConfigPath = translationDocsPath + "\\" + "optionals.txt";
+            string engOptionalsPath = translationDocsPath + "\\" + "ENG_Optionals.txt";
 
             var ogOptions = System.IO.File.ReadAllLines(ogConfigPath);
             var engOptionals = System.IO.File.ReadAllLines(engOptionalsPath);
@@ -346,7 +352,7 @@ namespace EldoriaLauncher
             objectListView1.Columns.Add(itemColumn);
 
             // Set the data source
-            var items = await LoadItemsFromTwoFiles(configPath + "\\" + "ENG_Optionals.txt", configPath + "\\" + "ES_Descriptions.txt");
+            var items = await LoadItemsFromTwoFiles(translationDocsPath + "\\" + "ENG_Optionals.txt", translationDocsPath + "\\" + "ES_Descriptions.txt");
             objectListView1.SetObjects(items);
 
             // CheckBox handling
@@ -484,10 +490,10 @@ namespace EldoriaLauncher
 
         private async Task HandleShiftF10Async()
         {
-            string optionalsFilePath = Path.Combine(configPath, "optionals.txt");
-            string esDescriptionsFilePath = Path.Combine(configPath, "ES_Descriptions.txt");
-            string engOptionalsFilePath = Path.Combine(configPath, "ENG_Optionals.txt");
-            string engDescriptionsFilePath = Path.Combine(configPath, "ENG_Descriptions.txt");
+            string optionalsFilePath = Path.Combine(translationDocsPath, "optionals.txt");
+            string esDescriptionsFilePath = Path.Combine(translationDocsPath, "ES_Descriptions.txt");
+            string engOptionalsFilePath = Path.Combine(translationDocsPath, "ENG_Optionals.txt");
+            string engDescriptionsFilePath = Path.Combine(translationDocsPath, "ENG_Descriptions.txt");
 
             var items = await LoadItemsFromFile(optionalsFilePath);
 
