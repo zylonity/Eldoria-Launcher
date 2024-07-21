@@ -694,6 +694,11 @@ namespace EldoriaLauncher
                 MessageBox.Show("Solo se pueden eliminar presets personalizados.");
             }
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class ListItem

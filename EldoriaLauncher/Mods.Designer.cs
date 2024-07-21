@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Mods));
             button1 = new Button();
             progressBar1 = new ProgressBar();
-            checkBox1 = new CheckBox();
             pictureBox1 = new PictureBox();
             objectListView1 = new BrightIdeasSoftware.ObjectListView();
             comboBox1 = new ComboBox();
@@ -58,18 +57,6 @@
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(215, 26);
             progressBar1.TabIndex = 9;
-            // 
-            // checkBox1
-            // 
-            checkBox1.AutoSize = true;
-            checkBox1.BackColor = Color.Transparent;
-            checkBox1.Location = new Point(275, 456);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(136, 19);
-            checkBox1.TabIndex = 11;
-            checkBox1.Text = "Descargar con Async";
-            checkBox1.UseVisualStyleBackColor = false;
-            checkBox1.Visible = false;
             // 
             // pictureBox1
             // 
@@ -146,7 +133,6 @@
             Controls.Add(comboBox1);
             Controls.Add(objectListView1);
             Controls.Add(pictureBox1);
-            Controls.Add(checkBox1);
             Controls.Add(progressBar1);
             Controls.Add(button1);
             FormBorderStyle = FormBorderStyle.None;
@@ -162,13 +148,11 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)objectListView1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
         private Button button1;
         private ProgressBar progressBar1;
-        private CheckBox checkBox1;
         private PictureBox pictureBox1;
         private BrightIdeasSoftware.ObjectListView objectListView1;
         private ComboBox comboBox1;

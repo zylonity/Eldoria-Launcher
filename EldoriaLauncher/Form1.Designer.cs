@@ -43,6 +43,15 @@
             checkBox1 = new CheckBox();
             OfflineUsernameBox = new TextBox();
             RamBox = new ComboBox();
+            ModsPanel = new Panel();
+            button4 = new Button();
+            button3 = new Button();
+            button2 = new Button();
+            comboBox1 = new ComboBox();
+            objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            pictureBox6 = new PictureBox();
+            progressBar1 = new ProgressBar();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -51,6 +60,9 @@
             MainPanel.SuspendLayout();
             SettingsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SettingsBack).BeginInit();
+            ModsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)objectListView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -217,6 +229,7 @@
             checkBox1.TabIndex = 26;
             checkBox1.Text = "Consola";
             checkBox1.UseVisualStyleBackColor = false;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
             // OfflineUsernameBox
             // 
@@ -229,6 +242,7 @@
             OfflineUsernameBox.Size = new Size(289, 26);
             OfflineUsernameBox.TabIndex = 6;
             OfflineUsernameBox.Text = "AAA";
+            OfflineUsernameBox.TextChanged += OfflineUsernameBox_TextChanged;
             // 
             // RamBox
             // 
@@ -246,12 +260,112 @@
             RamBox.Size = new Size(289, 28);
             RamBox.TabIndex = 5;
             RamBox.Text = "4096";
+            RamBox.SelectedIndexChanged += RamBox_SelectedIndexChanged;
+            // 
+            // ModsPanel
+            // 
+            ModsPanel.BackgroundImage = Properties.Resources.fondo_modsl;
+            ModsPanel.Controls.Add(button4);
+            ModsPanel.Controls.Add(button3);
+            ModsPanel.Controls.Add(button2);
+            ModsPanel.Controls.Add(comboBox1);
+            ModsPanel.Controls.Add(objectListView1);
+            ModsPanel.Controls.Add(pictureBox6);
+            ModsPanel.Controls.Add(progressBar1);
+            ModsPanel.Controls.Add(button1);
+            ModsPanel.Location = new Point(866, 0);
+            ModsPanel.Name = "ModsPanel";
+            ModsPanel.Size = new Size(433, 489);
+            ModsPanel.TabIndex = 26;
+            ModsPanel.Visible = false;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(36, 330);
+            button4.Name = "button4";
+            button4.Size = new Size(137, 37);
+            button4.TabIndex = 31;
+            button4.Text = "Borrar Preset";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(36, 287);
+            button3.Name = "button3";
+            button3.Size = new Size(137, 37);
+            button3.TabIndex = 30;
+            button3.Text = "Guardar Preset";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(36, 244);
+            button2.Name = "button2";
+            button2.Size = new Size(137, 37);
+            button2.TabIndex = 29;
+            button2.Text = "Crear Preset";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(24, 186);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(163, 23);
+            comboBox1.TabIndex = 28;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
+            // objectListView1
+            // 
+            objectListView1.BackColor = Color.White;
+            objectListView1.CellEditUseWholeCell = false;
+            objectListView1.CheckBoxes = true;
+            objectListView1.Location = new Point(193, 144);
+            objectListView1.Name = "objectListView1";
+            objectListView1.Size = new Size(210, 246);
+            objectListView1.TabIndex = 27;
+            objectListView1.View = View.Details;
+            // 
+            // pictureBox6
+            // 
+            pictureBox6.BackColor = Color.Transparent;
+            pictureBox6.Cursor = Cursors.Hand;
+            pictureBox6.Image = Properties.Resources.atrás;
+            pictureBox6.Location = new Point(13, 12);
+            pictureBox6.Margin = new Padding(4, 3, 4, 3);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(23, 23);
+            pictureBox6.SizeMode = PictureBoxSizeMode.CenterImage;
+            pictureBox6.TabIndex = 26;
+            pictureBox6.TabStop = false;
+            pictureBox6.Click += pictureBox6_Click;
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(31, 418);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(215, 26);
+            progressBar1.TabIndex = 25;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(282, 410);
+            button1.Name = "button1";
+            button1.Size = new Size(124, 42);
+            button1.TabIndex = 24;
+            button1.Text = "Actualizar Mods";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.Launcher_fondo_menus;
             ClientSize = new Size(1299, 489);
+            Controls.Add(ModsPanel);
             Controls.Add(SettingsPanel);
             Controls.Add(MainPanel);
             FormBorderStyle = FormBorderStyle.None;
@@ -272,6 +386,9 @@
             SettingsPanel.ResumeLayout(false);
             SettingsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)SettingsBack).EndInit();
+            ModsPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)objectListView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ResumeLayout(false);
         }
 
@@ -290,6 +407,15 @@
         private CheckBox checkBox1;
         private Label ver;
         private PictureBox SettingsBack;
+        private Panel ModsPanel;
+        private Button button4;
+        private Button button3;
+        private Button button2;
+        private ComboBox comboBox1;
+        private BrightIdeasSoftware.ObjectListView objectListView1;
+        private PictureBox pictureBox6;
+        private ProgressBar progressBar1;
+        private Button button1;
     }
 }
 
