@@ -34,14 +34,23 @@
             pictureBox3 = new PictureBox();
             pictureBox4 = new PictureBox();
             RunBar = new ProgressBar();
-            ver = new Label();
             pictureBox5 = new PictureBox();
             textBox1 = new TextBox();
+            MainPanel = new Panel();
+            SettingsPanel = new Panel();
+            SettingsBack = new PictureBox();
+            ver = new Label();
+            checkBox1 = new CheckBox();
+            OfflineUsernameBox = new TextBox();
+            RamBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
+            MainPanel.SuspendLayout();
+            SettingsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SettingsBack).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -114,15 +123,6 @@
             RunBar.TabIndex = 18;
             RunBar.Visible = false;
             // 
-            // ver
-            // 
-            ver.AutoSize = true;
-            ver.BackColor = Color.Transparent;
-            ver.Location = new Point(751, 466);
-            ver.Name = "ver";
-            ver.Size = new Size(0, 15);
-            ver.TabIndex = 19;
-            // 
             // pictureBox5
             // 
             pictureBox5.BackColor = Color.Transparent;
@@ -150,19 +150,110 @@
             textBox1.TabIndex = 22;
             textBox1.Visible = false;
             // 
+            // MainPanel
+            // 
+            MainPanel.BackgroundImage = Properties.Resources.fondo_principal;
+            MainPanel.Controls.Add(pictureBox1);
+            MainPanel.Controls.Add(textBox1);
+            MainPanel.Controls.Add(pictureBox2);
+            MainPanel.Controls.Add(pictureBox3);
+            MainPanel.Controls.Add(pictureBox5);
+            MainPanel.Controls.Add(pictureBox4);
+            MainPanel.Controls.Add(RunBar);
+            MainPanel.Location = new Point(0, 0);
+            MainPanel.Name = "MainPanel";
+            MainPanel.Size = new Size(433, 489);
+            MainPanel.TabIndex = 23;
+            // 
+            // SettingsPanel
+            // 
+            SettingsPanel.BackgroundImage = Properties.Resources.fondo_ajustes;
+            SettingsPanel.Controls.Add(SettingsBack);
+            SettingsPanel.Controls.Add(ver);
+            SettingsPanel.Controls.Add(checkBox1);
+            SettingsPanel.Controls.Add(OfflineUsernameBox);
+            SettingsPanel.Controls.Add(RamBox);
+            SettingsPanel.Location = new Point(433, 0);
+            SettingsPanel.Name = "SettingsPanel";
+            SettingsPanel.Size = new Size(433, 489);
+            SettingsPanel.TabIndex = 25;
+            SettingsPanel.Visible = false;
+            // 
+            // SettingsBack
+            // 
+            SettingsBack.BackColor = Color.Transparent;
+            SettingsBack.Cursor = Cursors.Hand;
+            SettingsBack.Image = Properties.Resources.atrás;
+            SettingsBack.Location = new Point(7, 11);
+            SettingsBack.Margin = new Padding(4, 3, 4, 3);
+            SettingsBack.Name = "SettingsBack";
+            SettingsBack.Size = new Size(23, 23);
+            SettingsBack.SizeMode = PictureBoxSizeMode.CenterImage;
+            SettingsBack.TabIndex = 28;
+            SettingsBack.TabStop = false;
+            SettingsBack.Click += SettingsBack_Click;
+            // 
+            // ver
+            // 
+            ver.AutoSize = true;
+            ver.BackColor = Color.Transparent;
+            ver.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
+            ver.ForeColor = Color.White;
+            ver.Location = new Point(19, 461);
+            ver.Name = "ver";
+            ver.Size = new Size(60, 16);
+            ver.TabIndex = 27;
+            ver.Text = "Version";
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.BackColor = Color.Transparent;
+            checkBox1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            checkBox1.ForeColor = Color.White;
+            checkBox1.Location = new Point(335, 457);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(83, 20);
+            checkBox1.TabIndex = 26;
+            checkBox1.Text = "Consola";
+            checkBox1.UseVisualStyleBackColor = false;
+            // 
+            // OfflineUsernameBox
+            // 
+            OfflineUsernameBox.BackColor = Color.FromArgb(110, 110, 110);
+            OfflineUsernameBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OfflineUsernameBox.ForeColor = Color.White;
+            OfflineUsernameBox.Location = new Point(72, 185);
+            OfflineUsernameBox.Margin = new Padding(4, 3, 4, 3);
+            OfflineUsernameBox.Name = "OfflineUsernameBox";
+            OfflineUsernameBox.Size = new Size(289, 26);
+            OfflineUsernameBox.TabIndex = 6;
+            OfflineUsernameBox.Text = "AAA";
+            // 
+            // RamBox
+            // 
+            RamBox.AccessibleRole = AccessibleRole.None;
+            RamBox.BackColor = Color.FromArgb(110, 110, 110);
+            RamBox.DisplayMember = "1";
+            RamBox.FlatStyle = FlatStyle.Flat;
+            RamBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RamBox.ForeColor = Color.White;
+            RamBox.FormattingEnabled = true;
+            RamBox.Items.AddRange(new object[] { "4096", "5120", "6144", "7168", "8192", "9216", "10240", "11264", "12288", "13312", "14336", "15360", "16384", "17408", "18432", "19456", "20480" });
+            RamBox.Location = new Point(72, 276);
+            RamBox.Margin = new Padding(4, 3, 4, 3);
+            RamBox.Name = "RamBox";
+            RamBox.Size = new Size(289, 28);
+            RamBox.TabIndex = 5;
+            RamBox.Text = "4096";
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackgroundImage = Properties.Resources.fondo_principal;
-            ClientSize = new Size(433, 489);
-            Controls.Add(textBox1);
-            Controls.Add(pictureBox5);
-            Controls.Add(ver);
-            Controls.Add(RunBar);
-            Controls.Add(pictureBox4);
-            Controls.Add(pictureBox3);
-            Controls.Add(pictureBox2);
-            Controls.Add(pictureBox1);
+            BackgroundImage = Properties.Resources.Launcher_fondo_menus;
+            ClientSize = new Size(1299, 489);
+            Controls.Add(SettingsPanel);
+            Controls.Add(MainPanel);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
@@ -176,8 +267,12 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
+            SettingsPanel.ResumeLayout(false);
+            SettingsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)SettingsBack).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -186,9 +281,15 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
         private ProgressBar RunBar;
-        private Label ver;
         private PictureBox pictureBox5;
         private TextBox textBox1;
+        private Panel MainPanel;
+        private Panel SettingsPanel;
+        private TextBox OfflineUsernameBox;
+        private ComboBox RamBox;
+        private CheckBox checkBox1;
+        private Label ver;
+        private PictureBox SettingsBack;
     }
 }
 

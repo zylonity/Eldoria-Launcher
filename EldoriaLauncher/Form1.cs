@@ -23,6 +23,16 @@ namespace EldoriaLauncher
 {
     public partial class Form1 : Form
     {
+        //Initialises everything
+        public Form1()
+        {
+            InitializeComponent();
+            checkFabricVer();
+            PlayActive();
+            
+        }
+
+        //FORM 1 STUFF
         string offlineUsername = (string)Properties.Settings.Default["Username"];
         int ram = (int)Properties.Settings.Default["Ram"];
         string mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
@@ -33,7 +43,6 @@ namespace EldoriaLauncher
         bool updating = false;
         public void PlayActive()
         {
-            ver.Text = (string)Properties.Settings.Default["ModpackVer"];
             //Is Username Valid
             bool usernameValid = false;
             offlineUsername = (string)Properties.Settings.Default["Username"];
@@ -58,15 +67,6 @@ namespace EldoriaLauncher
                 pictureBox1.Enabled = false;
             }
 
-        }
-
-
-        //Initialises everything
-        public Form1()
-        {
-            InitializeComponent();
-            checkFabricVer();
-            PlayActive();
         }
 
         void checkFabricVer()
@@ -126,7 +126,7 @@ namespace EldoriaLauncher
 
             //install
             await fabricInstaller.Install((string)Properties.Settings.Default["MinecraftVer"], (string)Properties.Settings.Default["FabricVer"], path);
-            
+
 
             // update version list
             await launcher.GetAllVersionsAsync();
@@ -262,12 +262,9 @@ namespace EldoriaLauncher
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            Settings settings = new Settings();
-            settings.Location = this.Location;
-            settings.Activate();
-            settings.Show();
-            this.Hide();
-            settings.Update();
+            LoadSettings();
+            MainPanel.Visible = false;
+            SettingsPanel.Visible = true;
         }
 
         private void pictureBox5_MouseEnter(object sender, EventArgs e)
@@ -292,12 +289,8 @@ namespace EldoriaLauncher
 
         private void pictureBox5_Click(object sender, EventArgs e)
         {
-            Mods mods = new Mods();
-            mods.Location = this.Location;
-            mods.Activate();
-            mods.Show();
-            this.Hide();
-            mods.Update();
+            MainPanel.Visible = false;
+            SettingsPanel.Visible = true;
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
@@ -327,6 +320,51 @@ namespace EldoriaLauncher
             {
                 pictureBox4.Image = Properties.Resources.boton_ajustes;
             }
+        }
+
+
+
+        //SETTINGS FORM
+        private void LoadSettings()
+        {
+            OfflineUsernameBox.Text = (string)Properties.Settings.Default["Username"];
+            RamBox.SelectedIndex = (int)Properties.Settings.Default["RamIndex"];
+            checkBox1.Checked = (bool)Properties.Settings.Default["Console"];
+            ver.Text = (string)Properties.Settings.Default["AppVer"];
+        }
+
+        private void RamBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int fid;
+            bool parseOK = Int32.TryParse(RamBox.Items[RamBox.SelectedIndex].ToString(), out fid);
+            Properties.Settings.Default["Ram"] = fid;
+            Properties.Settings.Default["RamIndex"] = RamBox.SelectedIndex;
+        }
+
+        private void OfflineUsernameBox_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Username"] = OfflineUsernameBox.Text;
+
+            PlayActive();
+        }
+
+        //private void pictureBox1_Click(object sender, EventArgs e)
+        //{
+        //    this.Close();
+        //    mainForm.Location = this.Location;
+        //    mainForm.Show();
+        //    mainForm.PlayActive();
+        //}
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Console"] = checkBox1.Checked;
+        }
+
+        private void SettingsBack_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            SettingsPanel.Visible = false;
+            MainPanel.Visible = true;
         }
     }
 }
