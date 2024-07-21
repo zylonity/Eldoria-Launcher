@@ -365,7 +365,6 @@
             // 
             // LauncherMain
             // 
-            DoubleBuffered = true;
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.Launcher_fondo_menus;
             ClientSize = new Size(433, 489);
@@ -395,6 +394,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ResumeLayout(false);
         }
+
 
         #endregion
         private System.Windows.Forms.PictureBox pictureBox1;
