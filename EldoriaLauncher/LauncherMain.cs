@@ -1,36 +1,385 @@
-﻿using Microsoft.VisualBasic.Devices;
-using Modrinth;
-using Modrinth.Exceptions;
-using Modrinth.Models;
+﻿using System;
 using System.Net;
-using static System.Windows.Forms.Design.AxImporter;
-using System.IO.Compression;
+using CmlLib.Core;
+using CmlLib.Core.Auth;
+using CmlLib.Core.ProcessBuilder;
+using System.Runtime.InteropServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Net.WebRequestMethods;
+using System.Diagnostics;
+using System.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using Modrinth;
+using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.Arm;
+using EldoriaLauncher.Properties;
 using EldoriaLauncher.MrPack;
 using System.Text.Json;
-using System.Xml.Linq;
+using Modrinth.Models;
+using CmlLib.Core.ModLoaders.FabricMC;
+using System.Reflection.Metadata.Ecma335;
 using BrightIdeasSoftware;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Runtime.InteropServices.Marshalling;
-using static System.Windows.Forms.LinkLabel;
-using CmlLib.Core.Files;
-using System.IO;
 
 namespace EldoriaLauncher
 {
-
-
-    public partial class Mods : Form
+    public partial class LauncherMain : Form
     {
+        //Initialises everything
+        public LauncherMain()
+        {
+            InitializeComponent();
+            checkFabricVer();
+            PlayActive();
+            InitializeObjectListView();
+            PopulateComboBox();
 
-        Form1 mainForm = Application.OpenForms.OfType<Form1>().Single();
+            if (!Directory.Exists(translationDocsPath))
+            {
+                MessageBox.Show("La carpeta translation_docs no existe. Por favor, reinstala el launcher.");
+                Application.Exit();
+            }
 
-        string eldoriaPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
+        }
+
+        //Move window
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        //OLD FORM 1 STUFF
+        #region main menu code
+
+        string offlineUsername = (string)Properties.Settings.Default["Username"];
+        int ram = (int)Properties.Settings.Default["Ram"];
+        string mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
+        string mcPathStr = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string modsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\mods";
+        string eldoriaPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria";
         string translationDocsPath = Environment.GetEnvironmentVariable("appdata") + "\\.Eldoria\\translation_docs";
 
-        bool downloadAsync = false;
+
+        bool updating = false;
+        public void PlayActive()
+        {
+            //Is Username Valid
+            bool usernameValid = false;
+            offlineUsername = (string)Properties.Settings.Default["Username"];
+
+
+            if (offlineUsername.Length >= 4 && offlineUsername.Contains(" ") == false && offlineUsername != "")
+            {
+                usernameValid = true;
+            }
+            else
+            {
+                usernameValid = false;
+            }
+
+
+            if (usernameValid && updating == false)
+            {
+                pictureBox1.Enabled = true;
+            }
+            else
+            {
+                pictureBox1.Enabled = false;
+            }
+
+        }
+
+        void checkFabricVer()
+        {
+            var eldoriaIndex = JsonSerializer.Deserialize<ModIndex>(System.IO.File.ReadAllText(mcPathStr + "\\modrinth.index.json"));
+
+
+            //Update mc version and fabric version properties
+            Properties.Settings.Default["MinecraftVer"] = eldoriaIndex.dependencies.minecraft;
+            Properties.Settings.Default["FabricVer"] = eldoriaIndex.dependencies.fabric_loader;
+            Properties.Settings.Default["ModpackVer"] = eldoriaIndex.versionId;
+            Properties.Settings.Default.Save();
+        }
+
+        //Pressing play in offline mode
+        private async void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+            pictureBox1.Enabled = false;
+            pictureBox4.Enabled = false;
+            pictureBox5.Enabled = false;
+
+
+            RunBar.Visible = true;
+            textBox1.Visible = true;
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            System.Net.ServicePointManager.DefaultConnectionLimit = 256;
+
+            ram = (int)Properties.Settings.Default["Ram"];
+
+            var path = new MinecraftPath(mcPathStr);
+            var launcher = new MinecraftLauncher(path);
+
+            launcher.FileProgressChanged += (sender, args) =>
+            {
+                textBox1.Text = args.Name;
+            };
+            launcher.ByteProgressChanged += (sender, args) =>
+            {
+                var percentage = (args.ProgressedBytes / args.TotalBytes) * 100;
+                RunBar.Value = (int)percentage;
+            };
+
+            // initialize fabric version loader
+            var httpCli = new HttpClient();
+            var fabricInstaller = new FabricInstaller(httpCli);
+            //var fabricLoaders = fabricInstaller.GetLoaders((string)Properties.Settings.Default["MinecraftVer"]);
+
+            //var selectedLoader = fabricLoaders.Result.Find(loader => loader.Version == (string)Properties.Settings.Default["FabricVer"]);
+
+            //get version
+            mcVer = "fabric-loader-" + (string)Properties.Settings.Default["FabricVer"] + "-" + (string)Properties.Settings.Default["MinecraftVer"];
+
+
+
+            //install
+            await fabricInstaller.Install((string)Properties.Settings.Default["MinecraftVer"], (string)Properties.Settings.Default["FabricVer"], path);
+
+
+            // update version list
+            await launcher.GetAllVersionsAsync();
+
+            var process = await launcher.CreateProcessAsync(mcVer, new MLaunchOption
+            {
+
+                MaximumRamMb = ram,
+                Session = MSession.CreateOfflineSession(offlineUsername),
+            });
+
+            if ((bool)Properties.Settings.Default["Console"] == true)
+            {
+                Logging logger = new Logging();
+                logger.Activate();
+                logger.Show();
+                this.Hide();
+                await logger.StartMinecraft(process);
+            }
+            else
+            {
+                process.Start();
+            }
+
+
+
+            await process.WaitForExitAsync();
+            this.Show();
+            pictureBox1.Enabled = true;
+            pictureBox4.Enabled = true;
+            pictureBox5.Enabled = true;
+
+            textBox1.Visible = false;
+            RunBar.Visible = false;
+        }
+
+
+
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+            if (pictureBox1.Enabled == true)
+            {
+                pictureBox1.Image = Properties.Resources.boton_jugar2;
+            }
+
+            PlayActive();
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            if (pictureBox1.Enabled == true)
+                pictureBox1.Image = Properties.Resources.boton_jugar;
+        }
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (pictureBox1.Enabled == true)
+                pictureBox1.Image = Properties.Resources.boton_jugar3;
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (pictureBox1.Enabled == true)
+                pictureBox1.Image = Properties.Resources.boton_jugar2;
+        }
+
+        private void pictureBox1_EnabledChanged(object sender, EventArgs e)
+        {
+
+
+            if (pictureBox1.Enabled == false)
+            {
+                pictureBox1.Image = Properties.Resources.boton_jugar_disabled;
+            }
+            else
+            {
+                pictureBox1.Image = Properties.Resources.boton_jugar;
+            }
+        }
+
+
+        //Close button
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+
+        //Minimize button
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void pictureBox4_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBox4.Image = Properties.Resources.boton_ajustes2;
+        }
+
+        private void pictureBox4_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox4.Image = Properties.Resources.boton_ajustes;
+        }
+
+        private void pictureBox4_MouseDown(object sender, MouseEventArgs e)
+        {
+            pictureBox4.Image = Properties.Resources.boton_ajustes3;
+        }
+
+        private void pictureBox4_MouseUp(object sender, MouseEventArgs e)
+        {
+            pictureBox4.Image = Properties.Resources.boton_ajustes2;
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            LoadSettings();
+            MainPanel.Visible = false;
+            SettingsPanel.Visible = true;
+        }
+
+        private void pictureBox5_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.boton_mods2;
+        }
+
+        private void pictureBox5_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.boton_mods;
+        }
+
+        private void pictureBox5_MouseDown(object sender, MouseEventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.boton_mods3;
+        }
+
+        private void pictureBox5_MouseUp(object sender, MouseEventArgs e)
+        {
+            pictureBox5.Image = Properties.Resources.boton_mods2;
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            MainPanel.Visible = false;
+            ModsPanel.Visible = true;
+        }
+
+        private void pictureBox5_EnabledChanged(object sender, EventArgs e)
+        {
+            if (pictureBox5.Enabled == false)
+            {
+                pictureBox5.Image = Properties.Resources.boton_mods_disabled;
+            }
+            else
+            {
+                pictureBox5.Image = Properties.Resources.boton_mods;
+            }
+        }
+
+        private void pictureBox4_EnabledChanged(object sender, EventArgs e)
+        {
+            if (pictureBox4.Enabled == false)
+            {
+                pictureBox4.Image = Properties.Resources.boton_ajustes_disabled;
+            }
+            else
+            {
+                pictureBox4.Image = Properties.Resources.boton_ajustes;
+            }
+        }
+        #endregion
+
+        //OLD SETTINGS FORM STUFF
+        #region settings code
+        private void LoadSettings()
+        {
+            OfflineUsernameBox.Text = (string)Properties.Settings.Default["Username"];
+            RamBox.SelectedIndex = (int)Properties.Settings.Default["RamIndex"];
+            checkBox1.Checked = (bool)Properties.Settings.Default["Console"];
+            ver.Text = (string)Properties.Settings.Default["AppVer"];
+        }
+
+        private void RamBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int fid;
+            bool parseOK = Int32.TryParse(RamBox.Items[RamBox.SelectedIndex].ToString(), out fid);
+            Properties.Settings.Default["Ram"] = fid;
+            Properties.Settings.Default["RamIndex"] = RamBox.SelectedIndex;
+            Properties.Settings.Default.Save();
+        }
+
+        private void OfflineUsernameBox_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Username"] = OfflineUsernameBox.Text;
+            Properties.Settings.Default.Save();
+            PlayActive();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Console"] = checkBox1.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void SettingsBack_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            SettingsPanel.Visible = false;
+            MainPanel.Visible = true;
+        }
+
+        #endregion
+
+        //MODS FORM
+        #region mods code
+        public class ListItem
+        {
+            public string Category { get; set; }
+            public string ItemName { get; set; }
+            public string toolTip { get; set; }
+            public bool Checked { get; set; }
+        }
 
         ModrinthClient client;
         UserAgent userAgent;
@@ -39,25 +388,6 @@ namespace EldoriaLauncher
         Modrinth.Models.Version version;
         ModIndex eldoriaIndex;
         Dictionary<string, Tuple<string, string>> installModList = new Dictionary<string, Tuple<string, string>>();
-
-
-        public Mods()
-        {
-            InitializeComponent();
-            InitializeObjectListView();
-            PopulateComboBox();
-
-            this.KeyPreview = true;
-
-            if (!Directory.Exists(translationDocsPath))
-            {
-                MessageBox.Show("La carpeta translation_docs no existe. Por favor, reinstala el launcher.");
-                Application.Exit();
-            }
-            //GetMods();
-        }
-
-
 
         void LoadCheckboxes()
         {
@@ -96,23 +426,19 @@ namespace EldoriaLauncher
 
         private void PopulateComboBox()
         {
-            // Define the path to the main folder and the custom subfolder
             string mainFolderPath = Path.Combine(eldoriaPath, "optional_packs");
             string customFolderPath = Path.Combine(mainFolderPath, "custom");
 
-            // Check if the main folder exists
             if (!Directory.Exists(mainFolderPath))
             {
-                MessageBox.Show("The optional_packs folder does not exist.");
+                MessageBox.Show("optional_packs no existe.");
                 return;
             }
 
-            // Retrieve the names of the files in the main folder
             string[] mainFileNames = Directory.GetFiles(mainFolderPath)
                                          .Select(file => Path.GetFileNameWithoutExtension(file))
                                          .ToArray();
 
-            // Retrieve the names of the files in the custom folder, if it exists
             string[] customFileNames = Array.Empty<string>();
             if (Directory.Exists(customFolderPath))
             {
@@ -121,10 +447,8 @@ namespace EldoriaLauncher
                                       .ToArray();
             }
 
-            // Combine the file names from both folders
             string[] allFileNames = mainFileNames.Concat(customFileNames).ToArray();
 
-            // Populate the ComboBox with the combined file names
             comboBox1.Items.Clear();
             comboBox1.Items.AddRange(allFileNames);
         }
@@ -132,8 +456,8 @@ namespace EldoriaLauncher
         async Task InstallMods()
         {
             button1.Enabled = false;
-            pictureBox1.Enabled = false;
-            pictureBox1.Visible = false;
+            pictureBox6.Enabled = false;
+            pictureBox6.Visible = false;
 
             string docPath = eldoriaPath + "\\" + "downloadedOptionalMods.txt";
             string ogConfigPath = translationDocsPath + "\\" + "optionals.txt";
@@ -298,27 +622,9 @@ namespace EldoriaLauncher
             }
 
             button1.Enabled = true;
-            pictureBox1.Enabled = true;
-            pictureBox1.Visible = true;
+            pictureBox6.Enabled = true;
+            pictureBox6.Visible = true;
 
-        }
-
-        //Move window
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-
-        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-
-        private void Settings_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -326,14 +632,6 @@ namespace EldoriaLauncher
 
             InstallMods();
 
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            mainForm.Location = this.Location;
-            mainForm.Show();
-            mainForm.PlayActive();
         }
 
         private async void InitializeObjectListView()
@@ -695,18 +993,12 @@ namespace EldoriaLauncher
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void pictureBox6_Click(object sender, EventArgs e)
         {
-
+            MainPanel.Visible = true;
+            ModsPanel.Visible = false;
         }
-    }
+        #endregion
 
-    public class ListItem
-    {
-        public string Category { get; set; }
-        public string ItemName { get; set; }
-        public string toolTip { get; set; }
-        public bool Checked { get; set; }
     }
-
 }

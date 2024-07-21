@@ -1,6 +1,6 @@
 ﻿namespace EldoriaLauncher
 {
-    partial class Form1
+    partial class LauncherMain
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherMain));
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
@@ -176,6 +176,7 @@
             MainPanel.Name = "MainPanel";
             MainPanel.Size = new Size(433, 489);
             MainPanel.TabIndex = 23;
+            MainPanel.MouseDown += Form1_MouseDown;
             // 
             // SettingsPanel
             // 
@@ -185,11 +186,12 @@
             SettingsPanel.Controls.Add(checkBox1);
             SettingsPanel.Controls.Add(OfflineUsernameBox);
             SettingsPanel.Controls.Add(RamBox);
-            SettingsPanel.Location = new Point(433, 0);
+            SettingsPanel.Location = new Point(0, 0);
             SettingsPanel.Name = "SettingsPanel";
             SettingsPanel.Size = new Size(433, 489);
             SettingsPanel.TabIndex = 25;
             SettingsPanel.Visible = false;
+            SettingsPanel.MouseDown += Form1_MouseDown;
             // 
             // SettingsBack
             // 
@@ -273,11 +275,12 @@
             ModsPanel.Controls.Add(pictureBox6);
             ModsPanel.Controls.Add(progressBar1);
             ModsPanel.Controls.Add(button1);
-            ModsPanel.Location = new Point(866, 0);
+            ModsPanel.Location = new Point(0, 0);
             ModsPanel.Name = "ModsPanel";
             ModsPanel.Size = new Size(433, 489);
             ModsPanel.TabIndex = 26;
             ModsPanel.Visible = false;
+            ModsPanel.MouseDown += Form1_MouseDown;
             // 
             // button4
             // 
@@ -360,11 +363,12 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // Form1
+            // LauncherMain
             // 
+            DoubleBuffered = true;
             AutoScaleMode = AutoScaleMode.None;
             BackgroundImage = Properties.Resources.Launcher_fondo_menus;
-            ClientSize = new Size(1299, 489);
+            ClientSize = new Size(433, 489);
             Controls.Add(ModsPanel);
             Controls.Add(SettingsPanel);
             Controls.Add(MainPanel);
@@ -372,7 +376,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
-            Name = "Form1";
+            Name = "LauncherMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Eldoria Launcher";
             MouseDown += Form1_MouseDown;

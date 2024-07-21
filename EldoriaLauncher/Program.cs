@@ -158,7 +158,7 @@ namespace EldoriaLauncher
                 if (result < 0)
                     Application.Run(new Updater());
                 else
-                    Application.Run(new Form1());
+                    Application.Run(new LauncherMain());
             }
             else
             {

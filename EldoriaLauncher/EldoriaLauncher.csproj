@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Mods.cs" />
     <Compile Update="Updater.cs" />
     <Compile Update="Logging.cs">
       <SubType>Form</SubType>
